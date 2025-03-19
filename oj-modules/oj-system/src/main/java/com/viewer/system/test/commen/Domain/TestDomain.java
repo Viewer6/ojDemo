@@ -1,0 +1,14 @@
+package com.viewer.system.test.commen.Domain;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+@Data
+@TableName("db_test")
+public class TestDomain {
+    @TableId("test_id")
+    private Integer testId;
+    private String title;
+    private String content;
+}
