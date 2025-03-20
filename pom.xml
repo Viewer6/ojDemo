@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>oj-modules</module>
+        <module>oj-common</module>
     </modules>
 
     <parent>
