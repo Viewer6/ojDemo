@@ -29,6 +29,10 @@ public class Result<T> {
         return result;
     }
 
+    public static  <T>  Result<T> fail(ResultCode failedLogin) {
+        return Result.fail(failedLogin, null);
+    }
+
     public static  <T>  Result<T> fail(ResultCode failedLogin, T data) {
         Result<T> result = new Result<>();
 
