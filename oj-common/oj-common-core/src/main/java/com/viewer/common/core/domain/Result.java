@@ -1,41 +1,41 @@
 package com.viewer.common.core.domain;
 
+import com.viewer.common.core.emuns.ResultCode;
 import lombok.Data;
 
+// 统一返回结果
 @Data
 public class Result<T> {
     private int code;
     private String errMeg;
     private T data;
 
-    public static <T> Result success(T data){
+    public static  <T> Result<T> success(T data){
         Result<T> result = new Result<>();
 
-        result.setCode(1000);
-        result.setErrMeg("");
+        result.setCode(ResultCode.SUCCESS.getCode());
+        result.setErrMeg(ResultCode.SUCCESS.getMeg());
+        result.setData(data);
+
+        return result;
+    }
+    public static  <T>  Result<T> error(T data){
+        Result<T> result = new Result<>();
+
+        result.setCode(ResultCode.ERROR.getCode());
+        result.setErrMeg(ResultCode.ERROR.getMeg());
         result.setData(data);
 
         return result;
     }
 
-    public static <T> Result fail(Integer code, String message){
+    public static  <T>  Result<T> fail(ResultCode failedLogin, T data) {
         Result<T> result = new Result<>();
 
-        result.setCode(code);
-        result.setErrMeg(message);
-
-        return result;
-    }
-
-    public static <T> Result fail(Integer code, String message, T data){
-        Result<T> result = new Result<>();
-
-        result.setCode(code);
-        result.setErrMeg(message);
+        result.setCode(failedLogin.getCode());
+        result.setErrMeg(failedLogin.getMeg());
         result.setData(data);
 
         return result;
     }
-
-
 }

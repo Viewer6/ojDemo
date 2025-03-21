@@ -34,6 +34,12 @@
             <artifactId>oj-common-core</artifactId>
             <version>${oj-common-core.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>oj-common-swagger</artifactId>
+            <version>${oj-common-swagger.version}</version>
+        </dependency>
     </dependencies>
 
 
