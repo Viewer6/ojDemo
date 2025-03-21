@@ -1,7 +1,7 @@
 package com.viewer.system.test.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.viewer.system.test.commen.Domain.TestDomain;
+import com.viewer.system.test.Domain.TestDomain;
 import com.viewer.system.test.mapper.TestMapper;
 import com.viewer.system.test.service.ITestService;
 import jakarta.annotation.Resource;

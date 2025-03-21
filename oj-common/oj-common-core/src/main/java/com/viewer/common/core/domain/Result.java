@@ -8,6 +8,16 @@ public class Result<T> {
     private String errMeg;
     private T data;
 
+    public static <T> Result success(T data){
+        Result<T> result = new Result<>();
+
+        result.setCode(1000);
+        result.setErrMeg("");
+        result.setData(data);
+
+        return result;
+    }
+
     public static <T> Result fail(Integer code, String message){
         Result<T> result = new Result<>();
 
@@ -26,4 +36,6 @@ public class Result<T> {
 
         return result;
     }
+
+
 }

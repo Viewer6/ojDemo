@@ -28,6 +28,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>oj-common-core</artifactId>
+            <version>${oj-common-core.version}</version>
+        </dependency>
     </dependencies>
 
 

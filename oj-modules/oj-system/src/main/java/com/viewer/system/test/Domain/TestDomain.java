@@ -1,4 +1,4 @@
-package com.viewer.system.test.commen.Domain;
+package com.viewer.system.test.Domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
