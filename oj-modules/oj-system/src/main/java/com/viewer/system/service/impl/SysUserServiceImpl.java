@@ -6,6 +6,7 @@ import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.system.domain.SysUser;
 import com.viewer.system.mapper.SysUserMapper;
 import com.viewer.system.service.ISysUserService;
+import com.viewer.system.utils.BCryptUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class SysUserServiceImpl implements ISysUserService {
         if (sysUser == null){
             return Result.fail(ResultCode.FAILED_USER_NOT_EXISTS, false);
         }
-        if(!sysUser.getPassword().equals(password)){
+        if(!BCryptUtils.matchesPassword(password, sysUser.getPassword())){
             return Result.fail(ResultCode.FAILED_LOGIN, false);
         }
         return Result.success(true);
@@ -35,7 +36,7 @@ public class SysUserServiceImpl implements ISysUserService {
     public Result<Boolean> add(String userAccount, String password) {
         SysUser sysUser = new SysUser();
         sysUser.setUserAccount(userAccount);
-        sysUser.setPassword(password);
+        sysUser.setPassword(BCryptUtils.encryptPassword(password));
         try {
             sysUserMapper.insert(sysUser);
         }catch (Exception e){
