@@ -24,7 +24,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Resource(name = "sysUserMapper")
     private SysUserMapper sysUserMapper;
     @Value("${jwt.key}")
-    private String key;
+    private String key; // 密钥
 
     @Override
     public Result<String> login(String username, String password) {
