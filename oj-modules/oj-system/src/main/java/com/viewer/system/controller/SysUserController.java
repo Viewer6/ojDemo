@@ -84,7 +84,7 @@ public class SysUserController {
     @ApiResponse(responseCode = "3102", description = "用户不存在")
     @ApiResponse(responseCode = "3103", description = "用户名或密码错误")
     @ApiResponse(responseCode = "3104", description = "您已被列⼊⿊名单, 请联系管理员")
-    public Result<Boolean> login(@RequestBody LoginDTO loginDTO){
+    public Result<String> login(@RequestBody LoginDTO loginDTO){
         log.info("登录的用户名: {}; 登录的密码: {}", loginDTO.getUsername(), loginDTO.getPassword());
         return sysUserService.login(loginDTO.getUsername(), loginDTO.getPassword());
     }
