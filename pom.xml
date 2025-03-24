@@ -35,6 +35,7 @@
         <fastjson2.version>2.0.43</fastjson2.version>
         <oj-common-redis.version>1.0-SNAPSHOT</oj-common-redis.version>
         <io.jsonwebtoken.version>0.11.5</io.jsonwebtoken.version>
+        <hutool-all.version>5.8.26</hutool-all.version>
     </properties>
 
     <dependencies>

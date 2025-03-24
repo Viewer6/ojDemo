@@ -3,7 +3,8 @@ package com.viewer.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.emuns.ResultCode;
-import com.viewer.common.security.utils.JwtUtils;
+import com.viewer.common.core.emuns.UserIdentity;
+import com.viewer.common.security.service.TokenService;
 import com.viewer.system.domain.SysUser;
 import com.viewer.system.mapper.SysUserMapper;
 import com.viewer.system.service.ISysUserService;
@@ -13,18 +14,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
 @Slf4j
 @Service
 public class SysUserServiceImpl implements ISysUserService {
 
     @Resource(name = "sysUserMapper")
     private SysUserMapper sysUserMapper;
-    @Value("${jwt.key}")
-    private String key; // 密钥
+
+    @Resource
+    private TokenService tokenService;
+
+    @Value("${jwt.secret}")
+    private String secret; // 密钥
 
     @Override
     public Result<String> login(String username, String password) {
@@ -36,9 +37,7 @@ public class SysUserServiceImpl implements ISysUserService {
         if(!BCryptUtils.matchesPassword(password, sysUser.getPassword())){
             return Result.fail(ResultCode.FAILED_LOGIN, null);
         }
-        Map<String, Object> claim = new HashMap<>();
-        claim.put("userId", sysUser.getUserId());
-        String token = JwtUtils.createToken(claim, key);
+        String token = tokenService.getToken(sysUser.getUserId(), secret, UserIdentity.ADMIN.getValue());
         return Result.success(token);
     }
 

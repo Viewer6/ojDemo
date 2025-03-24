@@ -1,4 +1,4 @@
-package com.viewer.common.security;
+package com.viewer.common.security.handler;
 
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.emuns.ResultCode;
