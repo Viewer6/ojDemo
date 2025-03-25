@@ -6,7 +6,7 @@ import lombok.Data;
 // 统一返回结果
 @Data
 public class Result<T> {
-    private int code;
+    private Integer code;
     private String errMeg;
     private T data;
 
@@ -31,6 +31,14 @@ public class Result<T> {
 
     public static  <T>  Result<T> fail(ResultCode failedLogin) {
         return Result.fail(failedLogin, null);
+    }
+
+    public static  <T>  Result<T> fail(Integer code, String msg){
+        Result<T> result = new Result<>();
+        result.setCode(code);
+        result.setErrMeg(msg);
+
+        return result;
     }
 
     public static  <T>  Result<T> fail(ResultCode failedLogin, T data) {

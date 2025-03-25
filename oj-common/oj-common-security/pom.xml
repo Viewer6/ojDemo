@@ -54,7 +54,7 @@
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>oj-common-redis</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${oj-common-redis.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
