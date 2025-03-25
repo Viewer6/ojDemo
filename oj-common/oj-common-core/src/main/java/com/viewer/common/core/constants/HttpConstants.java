@@ -6,11 +6,12 @@ public class HttpConstants {
      */
     public static final String SYSTEM_URL_PREFIX = "system";
     /**
-     * ⽤⼾端url标识
+     * 用户端url标识
      */
     public static final String FRIEND_URL_PREFIX = "friend";
     /**
-     * 令牌⾃定义标识
+     * 令牌自定义标识
+     * Http请求中的一些字段, 专门用来存储一些身份标识
      */
     public static final String AUTHENTICATION = "Authorization";
     /**
