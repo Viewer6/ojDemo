@@ -1,4 +1,4 @@
-package com.viewer.common.security.utils;
+package com.viewer.common.core.utils;
 
 import com.viewer.common.core.constants.JwtConstants;
 import io.jsonwebtoken.Claims;

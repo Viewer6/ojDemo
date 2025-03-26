@@ -1,5 +1,6 @@
 package com.viewer.system.test.controller;
 
+import com.viewer.common.core.domain.Result;
 import com.viewer.common.redis.service.RedisService;
 import com.viewer.system.domain.SysUser;
 import com.viewer.system.test.service.ITestService;
@@ -26,12 +27,12 @@ public class TestController {
     }
 
     @RequestMapping("/redisTest")
-    public String redisTest(){
+    public Result<String> redisTest(){
         SysUser sysUser = new SysUser();
         sysUser.setUserAccount("redisTest");
         redisService.setCacheObject("user", sysUser);
 
         SysUser us = redisService.getCacheObject("user", SysUser.class);
-        return us.toString();
+        return Result.success(us.toString());
     }
 }

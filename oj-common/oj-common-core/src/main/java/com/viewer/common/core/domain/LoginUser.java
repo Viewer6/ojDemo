@@ -1,4 +1,4 @@
-package com.viewer.common.security.domain;
+package com.viewer.common.core.domain;
 
 import lombok.Data;
 

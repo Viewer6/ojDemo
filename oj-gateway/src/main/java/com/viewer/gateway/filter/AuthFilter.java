@@ -1,16 +1,17 @@
-package com.viewer.gateway;
+package com.viewer.gateway.filter;
 
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.viewer.common.core.constants.CacheConstants;
 import com.viewer.common.core.constants.HttpConstants;
+import com.viewer.common.core.domain.LoginUser;
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.emuns.UserIdentity;
+import com.viewer.common.core.utils.JwtUtils;
 import com.viewer.common.redis.service.RedisService;
-import com.viewer.common.security.domain.LoginUser;
-import com.viewer.common.security.utils.JwtUtils;
+import com.viewer.gateway.properties.IgnoreWhiteProperties;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         Claims claims;
         try {
             // 获取令牌中信息 解析payload中信息
+            // 基于webflux
             claims = JwtUtils.parseToken(token, secret);
             if (claims == null) {
                 return unauthorizedResponse(exchange, "令牌已过期或验证不正确！");
@@ -116,9 +118,9 @@ public class AuthFilter implements GlobalFilter, Ordered {
     /**
      * 判断url是否与规则匹配
      * 匹配规则中：
-     * ? 表⽰单个字符;
-     * * 表⽰⼀层路径内的任意字符串，不可跨层级;
-     * ** 表⽰任意层路径;
+     * ? 表示单个字符;
+     * * 表示一层路径内的任意字符串，不可跨层级;
+     * ** 表示任意层路径;
      *
      * @param pattern 匹配规则
      * @param url 需要匹配的url
@@ -163,6 +165,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
                 response.bufferFactory().wrap(JSON.toJSONString(result).getBytes());
         return response.writeWith(Mono.just(dataBuffer));
     }
+    // 配置优先级
     @Override
     public int getOrder() {
         return -200;
@@ -170,29 +173,4 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
 
 
-    public static void main(String[] args) {
-        AuthFilter authFilter = new AuthFilter();
-// 测试 ?
-        String pattern = "/sys/?bc";
-        System.out.println(authFilter.isMatch(pattern,"/sys/abc"));
-        System.out.println(authFilter.isMatch(pattern,"/sys/cbc"));
-        System.out.println(authFilter.isMatch(pattern,"/sys/acbc"));
-        System.out.println(authFilter.isMatch(pattern,"/sdsa/abc"));
-        System.out.println(authFilter.isMatch(pattern,"/sys/abcw"));
-// 测试*
-// String pattern = "/sys/*/bc";
-// System.out.println(authFilter.isMatch(pattern,"/sys/a/bc"));
-//System.out.println(authFilter.isMatch(pattern,"/sys/sdasdsadsad/bc"));
-// System.out.println(authFilter.isMatch(pattern,"/sys/a/b/bc"));
-// System.out.println(authFilter.isMatch(pattern,"/a/b/bc"));
-// System.out.println(authFilter.isMatch(pattern,"/sys/a/b/"));
-// 测试**
-// String pattern = "/sys/**/bc";
-// System.out.println(authFilter.isMatch(pattern, "/sys/a/bc"));
-// System.out.println(authFilter.isMatch(pattern, "/sys/sdasdsadsad/bc"));
-// System.out.println(authFilter.isMatch(pattern, "/sys/a/b/bc"));
-// System.out.println(authFilter.isMatch(pattern, "/sys/a/b/s/23/432/fdsf///bc"));
-// System.out.println(authFilter.isMatch(pattern, "/a/b/s/23/432/fdsf///bc"));
-// System.out.println(authFilter.isMatch(pattern, "/sys/a/b/s/23/432/fdsf///"));
-    }
 }

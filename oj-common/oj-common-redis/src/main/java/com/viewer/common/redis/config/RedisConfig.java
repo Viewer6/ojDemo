@@ -1,6 +1,8 @@
 package com.viewer.common.redis.config;
 
 import com.viewer.common.redis.config.JsonRedisSerializer;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 // redis配置
 @Configuration
+@AutoConfigureBefore(RedisAutoConfiguration.class) // 告诉spring框架自定义配置优先级更高
 public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {

@@ -3,10 +3,9 @@ package com.viewer.common.security.service;
 import cn.hutool.core.lang.UUID;
 import com.viewer.common.core.constants.CacheConstants;
 import com.viewer.common.core.constants.JwtConstants;
-import com.viewer.common.core.emuns.UserIdentity;
 import com.viewer.common.redis.service.RedisService;
-import com.viewer.common.security.domain.LoginUser;
-import com.viewer.common.security.utils.JwtUtils;
+import com.viewer.common.core.domain.LoginUser;
+import com.viewer.common.core.utils.JwtUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
