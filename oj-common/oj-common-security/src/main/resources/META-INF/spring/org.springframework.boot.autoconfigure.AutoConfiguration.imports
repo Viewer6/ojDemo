@@ -1,2 +1,4 @@
 com.viewer.common.security.handler.GlobalExceptionHandler
 com.viewer.common.security.service.TokenService
+com.viewer.common.security.config.WebMvcConfig
+com.viewer.common.security.interceptor.TokenInterceptor

@@ -50,6 +50,16 @@ public class RedisService {
     }
 
     /**
+     * 获取过期时间
+     * @param tokenKey token存储的过期时间
+     * @param timeUnit 过期时间格式
+     * @return 过期时间
+     */
+    public Long getExpire(String tokenKey, TimeUnit timeUnit){
+        return redisTemplate.getExpire(tokenKey, timeUnit);
+    }
+
+    /**
      * 删除单个对象
      *
      * @param key
