@@ -2,9 +2,9 @@ package com.viewer.system.controller;
 
 
 import com.viewer.common.core.domain.Result;
-import com.viewer.system.domain.LoginDTO;
-import com.viewer.system.domain.SysUserSaveDTO;
-import com.viewer.system.domain.SysUserVO;
+import com.viewer.system.domain.dto.LoginDTO;
+import com.viewer.system.domain.dto.SysUserSaveDTO;
+import com.viewer.system.domain.vo.SysUserVO;
 import com.viewer.system.service.impl.SysUserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/sysUser")
-public class SysUserController {
+public class SysUserController{
 
     @Resource(name = "sysUserServiceImpl")
     private SysUserServiceImpl sysUserService;
@@ -45,7 +45,7 @@ public class SysUserController {
     @ApiResponse(responseCode = "2000", description = "服务繁忙请稍后重试")
     @ApiResponse(responseCode = "3101", description = "用户已存在")
     @PostMapping("/addSysUser")
-    public Result<Boolean> addSysUser(@RequestBody SysUserSaveDTO sysUserSaveDTO){
+    public Result<Void> addSysUser(@RequestBody SysUserSaveDTO sysUserSaveDTO){
         log.info("添加的账户名称: {}; 账户密码: {}", sysUserSaveDTO.getUserAccount(), sysUserSaveDTO.getPassword());
         return sysUserService.add(sysUserSaveDTO.getUserAccount(), sysUserSaveDTO.getPassword());
     }

@@ -1,9 +1,13 @@
 package com.viewer.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.viewer.common.core.service.BaseService;
+import com.viewer.common.core.domain.BaseEntity;
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.emuns.UserIdentity;
+import com.viewer.common.redis.service.RedisService;
 import com.viewer.common.security.service.TokenService;
 import com.viewer.system.domain.SysUser;
 import com.viewer.system.mapper.SysUserMapper;
@@ -14,9 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Slf4j
 @Service
-public class SysUserServiceImpl implements ISysUserService {
+public class SysUserServiceImpl extends BaseService implements ISysUserService{
 
     @Resource(name = "sysUserMapper")
     private SysUserMapper sysUserMapper;
@@ -26,6 +33,9 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Value("${jwt.secret}")
     private String secret; // 密钥
+
+    @Resource
+    private RedisService redisService;
 
     @Override
     public Result<String> login(String username, String password) {
@@ -42,17 +52,16 @@ public class SysUserServiceImpl implements ISysUserService {
     }
 
     @Override
-    public Result<Boolean> add(String userAccount, String password) {
+    public Result<Void> add(String userAccount, String password) {
+        List<SysUser> s = sysUserMapper.selectList(new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getUserAccount, userAccount));
+        if(CollectionUtil.isNotEmpty(s)){
+            return Result.fail(ResultCode.AILED_USER_EXISTS);
+        }
         SysUser sysUser = new SysUser();
         sysUser.setUserAccount(userAccount);
         sysUser.setPassword(BCryptUtils.encryptPassword(password));
-        try {
-            sysUserMapper.insert(sysUser);
-        }catch (Exception e){
-            log.error("添加失败! e: ", e.fillInStackTrace());
-            return Result.fail(ResultCode.FAILED, false);
-        }
-        return Result.success(true);
+        return getResult(sysUserMapper.insert(sysUser));
     }
 
     @Override
