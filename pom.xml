@@ -36,6 +36,7 @@
         <oj-common-redis.version>1.0-SNAPSHOT</oj-common-redis.version>
         <oj-common-mybatis.version>1.0-SNAPSHOT</oj-common-mybatis.version>
         <io.jsonwebtoken.version>0.11.5</io.jsonwebtoken.version>
+        <jackson-databind.version>2.13.4</jackson-databind.version>
         <hutool-all.version>5.8.26</hutool-all.version>
     </properties>
 

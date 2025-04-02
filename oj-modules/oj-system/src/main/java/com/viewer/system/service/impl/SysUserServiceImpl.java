@@ -38,9 +38,9 @@ public class SysUserServiceImpl extends BaseService implements ISysUserService{
     private RedisService redisService;
 
     @Override
-    public Result<String> login(String username, String password) {
+    public Result<String> login(String userAccount, String password) {
         SysUser sysUser = sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>()
-                .eq(SysUser::getUserAccount, username));
+                .eq(SysUser::getUserAccount, userAccount));
         if (sysUser == null){
             return Result.fail(ResultCode.FAILED_USER_NOT_EXISTS, null);
         }

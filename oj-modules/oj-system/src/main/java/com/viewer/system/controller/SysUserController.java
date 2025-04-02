@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
  * 介绍: 用于给接口分组, 用途类似于为接口文档添加标签
  * 用于: 方法, 类, 接口
  */
+//@CrossOrigin(origins = "http://localhost:5174")
 @Tag(name = "管理员用户API")
 @Slf4j
 @RestController
@@ -85,7 +86,7 @@ public class SysUserController{
     @ApiResponse(responseCode = "3103", description = "用户名或密码错误")
     @ApiResponse(responseCode = "3104", description = "您已被列⼊⿊名单, 请联系管理员")
     public Result<String> login(@RequestBody LoginDTO loginDTO){
-        log.info("登录的用户名: {}; 登录的密码: {}", loginDTO.getUsername(), loginDTO.getPassword());
-        return sysUserService.login(loginDTO.getUsername(), loginDTO.getPassword());
+        log.info("登录的用户名: {}; 登录的密码: {}", loginDTO.getUserAccount(), loginDTO.getPassword());
+        return sysUserService.login(loginDTO.getUserAccount(), loginDTO.getPassword());
     }
 }
