@@ -3,6 +3,7 @@ package com.viewer.common.security.service;
 import cn.hutool.core.lang.UUID;
 import com.viewer.common.core.constants.CacheConstants;
 import com.viewer.common.core.constants.JwtConstants;
+import com.viewer.common.core.domain.vo.LoginUserIdVO;
 import com.viewer.common.redis.service.RedisService;
 import com.viewer.common.core.domain.LoginUser;
 import com.viewer.common.core.utils.JwtUtils;
@@ -21,7 +22,7 @@ public class TokenService {
     @Resource
     private RedisService redisService;
 
-    public String getToken(Long userId, String secret, Integer identity){
+    public String getToken(Long userId, String secret, Integer identity, String nickName){
         String userKey = UUID.fastUUID().toString();
         Map<String, Object> claim = new HashMap<>();
         claim.put(JwtConstants.LOGIN_USER_ID, userId);
@@ -31,6 +32,7 @@ public class TokenService {
         String key = getTokenKey(userKey);
         LoginUser loginUser = new LoginUser();
         loginUser.setIdentity(identity);
+        loginUser.setNickName(nickName);
 
         redisService.setCacheObject(key, loginUser, CacheConstants.EXP, TimeUnit.MINUTES);
 
@@ -58,7 +60,17 @@ public class TokenService {
         }
     }
 
+
+    public LoginUser getIdentity(String token, String secret) {
+        String key = JwtUtils.getUserKey(JwtUtils.parseToken(token, secret));
+        if(key == null){
+            return null;
+        }
+        return redisService.getCacheObject(getTokenKey(key), LoginUser.class);
+    }
+
     private String getTokenKey(String userKey){
         return CacheConstants.LOGIN_TOKEN_KEY + userKey;
     }
+
 }

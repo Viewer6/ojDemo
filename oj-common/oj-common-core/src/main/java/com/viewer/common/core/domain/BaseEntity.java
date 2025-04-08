@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 // 定责类
 @Data
 public class BaseEntity {
+    private String nickName;
+
     @TableField(fill = FieldFill.INSERT)
     private Long createBy;
 

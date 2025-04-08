@@ -1,7 +1,9 @@
 package com.viewer.system.controller;
 
 
+import com.viewer.common.core.constants.HttpConstants;
 import com.viewer.common.core.domain.Result;
+import com.viewer.common.core.domain.vo.LoginUserIdVO;
 import com.viewer.system.domain.dto.LoginDTO;
 import com.viewer.system.domain.dto.SysUserSaveDTO;
 import com.viewer.system.domain.vo.SysUserVO;
@@ -88,5 +90,10 @@ public class SysUserController{
     public Result<String> login(@RequestBody LoginDTO loginDTO){
         log.info("登录的用户名: {}; 登录的密码: {}", loginDTO.getUserAccount(), loginDTO.getPassword());
         return sysUserService.login(loginDTO.getUserAccount(), loginDTO.getPassword());
+    }
+
+    @GetMapping("/getLoginIdentity")
+    public Result<LoginUserIdVO> getLoginUserIdentity(@RequestHeader(HttpConstants.AUTHENTICATION) String token){
+        return sysUserService.getLoginIdentity(token);
     }
 }

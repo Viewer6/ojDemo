@@ -1,4 +1,4 @@
-创建管理员表
+# 创建管理员表
 create table tb_sys_user (
                              user_id      bigint unsigned not null comment '用户id（主键）',
                              user_account varchar(20) not null  comment '账号',
@@ -12,4 +12,4 @@ create table tb_sys_user (
                              unique key `idx_user_account` (`user_account`)
 );
 
-这里不使用自增id的原因: 方便数据迁移和备份, 删除和插入操作不会浪费空间, 解决性能问题, 可预测性强, 解决分布式环境自增id唯一的问题
+# 这里不使用自增id的原因: 方便数据迁移和备份, 删除和插入操作不会浪费空间, 解决性能问题, 可预测性强, 解决分布式环境自增id唯一的问题

@@ -2,6 +2,8 @@ package com.viewer.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.viewer.common.core.domain.LoginUser;
+import com.viewer.common.core.domain.vo.LoginUserIdVO;
 import com.viewer.common.core.service.BaseService;
 import com.viewer.common.core.domain.BaseEntity;
 import com.viewer.common.core.domain.Result;
@@ -47,7 +49,7 @@ public class SysUserServiceImpl extends BaseService implements ISysUserService{
         if(!BCryptUtils.matchesPassword(password, sysUser.getPassword())){
             return Result.fail(ResultCode.FAILED_LOGIN, null);
         }
-        String token = tokenService.getToken(sysUser.getUserId(), secret, UserIdentity.ADMIN.getValue());
+        String token = tokenService.getToken(sysUser.getUserId(), secret, UserIdentity.ADMIN.getValue(), sysUser.getNickName());
         return Result.success(token);
     }
 
@@ -73,5 +75,14 @@ public class SysUserServiceImpl extends BaseService implements ISysUserService{
              return Result.fail(ResultCode.FAILED_USER_NOT_EXISTS, false);
          }
          return Result.success(true);
+    }
+
+    @Override
+    public Result<LoginUserIdVO> getLoginIdentity(String token) {
+        LoginUser loginUser = tokenService.getIdentity(token, secret);
+        if(loginUser == null){
+            return Result.fail(null);
+        }
+        return Result.success(new LoginUserIdVO(loginUser.getNickName()));
     }
 }
