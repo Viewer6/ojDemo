@@ -1,7 +1,9 @@
 package com.viewer.system.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.viewer.common.core.constants.HttpConstants;
 import com.viewer.common.core.domain.LoginUser;
 import com.viewer.common.core.domain.vo.LoginUserIdVO;
 import com.viewer.common.core.service.BaseService;
@@ -79,6 +81,9 @@ public class SysUserServiceImpl extends BaseService implements ISysUserService{
 
     @Override
     public Result<LoginUserIdVO> getLoginIdentity(String token) {
+        if(StrUtil.isNotEmpty(token) && token.startsWith(HttpConstants.PREFIX)){
+            token = token.replaceFirst(HttpConstants.PREFIX, "");
+        }
         LoginUser loginUser = tokenService.getIdentity(token, secret);
         if(loginUser == null){
             return Result.fail(null);

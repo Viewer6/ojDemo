@@ -94,6 +94,7 @@ public class SysUserController{
 
     @GetMapping("/getLoginIdentity")
     public Result<LoginUserIdVO> getLoginUserIdentity(@RequestHeader(HttpConstants.AUTHENTICATION) String token){
-        return sysUserService.getLoginIdentity(token);
+//        log.info(token.substring(7));
+        return sysUserService.getLoginIdentity(token); // .substring(7)
     }
 }
