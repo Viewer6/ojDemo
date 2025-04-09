@@ -56,6 +56,14 @@ public class SysUserServiceImpl extends BaseService implements ISysUserService{
     }
 
     @Override
+    public Result<Void> logout(String token) {
+        if(StrUtil.isNotEmpty(token) && token.startsWith(HttpConstants.PREFIX)){
+            token = token.replaceFirst(HttpConstants.PREFIX, "");
+        }
+        return getResult(tokenService.logout(token, secret));
+    }
+
+    @Override
     public Result<Void> add(String userAccount, String password) {
         List<SysUser> s = sysUserMapper.selectList(new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getUserAccount, userAccount));
@@ -90,4 +98,6 @@ public class SysUserServiceImpl extends BaseService implements ISysUserService{
         }
         return Result.success(new LoginUserIdVO(loginUser.getNickName()));
     }
+
+
 }

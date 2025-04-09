@@ -11,4 +11,6 @@ public interface ISysUserService {
     Result<Boolean> delete(Long userId);
 
     Result<LoginUserIdVO> getLoginIdentity(String token);
+
+    Result<Void> logout(String token);
 }

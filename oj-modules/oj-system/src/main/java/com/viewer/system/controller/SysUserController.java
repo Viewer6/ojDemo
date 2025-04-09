@@ -75,7 +75,7 @@ public class SysUserController{
     @ApiResponse(responseCode = "1000", description = "成功获取用户信息")
     @ApiResponse(responseCode = "2000", description = "服务繁忙请稍后重试")
     @ApiResponse(responseCode = "3101", description = "用户不存在")
-            public Result<SysUserVO> detail(Long userId, @RequestParam(required = false) String sex) {
+    public Result<SysUserVO> detail(Long userId, @RequestParam(required = false) String sex) {
         return null;
     }
 
@@ -90,6 +90,11 @@ public class SysUserController{
     public Result<String> login(@RequestBody LoginDTO loginDTO){
         log.info("登录的用户名: {}; 登录的密码: {}", loginDTO.getUserAccount(), loginDTO.getPassword());
         return sysUserService.login(loginDTO.getUserAccount(), loginDTO.getPassword());
+    }
+
+    @DeleteMapping("/logout")
+    public  Result<Void> logout(@RequestHeader(HttpConstants.AUTHENTICATION) String token){
+        return sysUserService.logout(token);
     }
 
     @GetMapping("/getLoginIdentity")

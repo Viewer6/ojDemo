@@ -69,8 +69,17 @@ public class TokenService {
         return redisService.getCacheObject(getTokenKey(key), LoginUser.class);
     }
 
+    public boolean logout(String token, String secret) {
+        String key = JwtUtils.getUserKey(JwtUtils.parseToken(token, secret));
+        if(key == null){
+            return false;
+        }
+        return redisService.deleteObject(getTokenKey(key));
+    }
+
     private String getTokenKey(String userKey){
         return CacheConstants.LOGIN_TOKEN_KEY + userKey;
     }
+
 
 }
