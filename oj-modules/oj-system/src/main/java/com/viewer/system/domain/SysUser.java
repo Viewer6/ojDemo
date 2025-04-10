@@ -16,5 +16,6 @@ public class SysUser extends BaseEntity {
     private Long userId;
     private String userAccount;
     private String password;
+    private String nickName;
 
 }
