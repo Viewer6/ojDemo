@@ -1,4 +1,4 @@
-package com.viewer.system.service.impl;
+package com.viewer.system.service.sysUser.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,22 +7,20 @@ import com.viewer.common.core.constants.HttpConstants;
 import com.viewer.common.core.domain.LoginUser;
 import com.viewer.common.core.domain.vo.LoginUserIdVO;
 import com.viewer.common.core.service.BaseService;
-import com.viewer.common.core.domain.BaseEntity;
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.emuns.UserIdentity;
 import com.viewer.common.redis.service.RedisService;
 import com.viewer.common.security.service.TokenService;
-import com.viewer.system.domain.SysUser;
+import com.viewer.system.domain.sysUser.SysUser;
 import com.viewer.system.mapper.SysUserMapper;
-import com.viewer.system.service.ISysUserService;
-import com.viewer.system.utils.BCryptUtils;
+import com.viewer.system.service.sysUser.ISysUserService;
+import com.viewer.common.core.utils.BCryptUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j

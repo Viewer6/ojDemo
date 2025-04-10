@@ -1,4 +1,4 @@
-package com.viewer.system.domain.dto;
+package com.viewer.system.domain.sysUser.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.viewer.system.utils;
+package com.viewer.common.core.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 

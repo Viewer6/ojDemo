@@ -1,4 +1,4 @@
-package com.viewer.system.domain;
+package com.viewer.system.domain.sysUser;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

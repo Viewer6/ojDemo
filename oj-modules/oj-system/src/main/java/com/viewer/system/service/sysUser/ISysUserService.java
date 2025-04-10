@@ -1,4 +1,4 @@
-package com.viewer.system.service;
+package com.viewer.system.service.sysUser;
 
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.domain.vo.LoginUserIdVO;
