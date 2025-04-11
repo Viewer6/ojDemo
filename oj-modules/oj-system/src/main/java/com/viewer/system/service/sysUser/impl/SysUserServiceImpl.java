@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.viewer.common.core.constants.HttpConstants;
 import com.viewer.common.core.domain.LoginUser;
 import com.viewer.common.core.domain.vo.LoginUserIdVO;
-import com.viewer.common.core.service.BaseService;
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.emuns.UserIdentity;
@@ -25,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class SysUserServiceImpl extends BaseService implements ISysUserService{
+public class SysUserServiceImpl implements ISysUserService{
 
     @Resource(name = "sysUserMapper")
     private SysUserMapper sysUserMapper;
@@ -54,24 +53,24 @@ public class SysUserServiceImpl extends BaseService implements ISysUserService{
     }
 
     @Override
-    public Result<Void> logout(String token) {
+    public Boolean logout(String token) {
         if(StrUtil.isNotEmpty(token) && token.startsWith(HttpConstants.PREFIX)){
             token = token.replaceFirst(HttpConstants.PREFIX, "");
         }
-        return getResult(tokenService.logout(token, secret));
+        return tokenService.logout(token, secret);
     }
 
     @Override
-    public Result<Void> add(String userAccount, String password) {
+    public Integer add(String userAccount, String password) {
         List<SysUser> s = sysUserMapper.selectList(new LambdaQueryWrapper<SysUser>()
                 .eq(SysUser::getUserAccount, userAccount));
         if(CollectionUtil.isNotEmpty(s)){
-            return Result.fail(ResultCode.AILED_USER_EXISTS);
+            return -1;
         }
         SysUser sysUser = new SysUser();
         sysUser.setUserAccount(userAccount);
         sysUser.setPassword(BCryptUtils.encryptPassword(password));
-        return getResult(sysUserMapper.insert(sysUser));
+        return sysUserMapper.insert(sysUser);
     }
 
     @Override

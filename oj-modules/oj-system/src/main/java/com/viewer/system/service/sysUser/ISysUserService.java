@@ -6,11 +6,11 @@ import com.viewer.common.core.domain.vo.LoginUserIdVO;
 public interface ISysUserService {
     Result<String> login(String userAccount, String password);
 
-    Result<Void> add(String userAccount, String password);
+    Integer add(String userAccount, String password);
 
     Result<Boolean> delete(Long userId);
 
     Result<LoginUserIdVO> getLoginIdentity(String token);
 
-    Result<Void> logout(String token);
+    Boolean logout(String token);
 }

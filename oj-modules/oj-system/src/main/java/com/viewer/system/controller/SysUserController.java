@@ -2,6 +2,7 @@ package com.viewer.system.controller;
 
 
 import com.viewer.common.core.constants.HttpConstants;
+import com.viewer.common.core.controller.BaseController;
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.domain.vo.LoginUserIdVO;
 import com.viewer.system.domain.sysUser.dto.LoginDTO;
@@ -29,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/sysUser")
-public class SysUserController{
+public class SysUserController extends BaseController {
 
     @Resource(name = "sysUserServiceImpl")
     private SysUserServiceImpl sysUserService;
@@ -50,7 +51,7 @@ public class SysUserController{
     @PostMapping("/addSysUser")
     public Result<Void> addSysUser(@RequestBody SysUserSaveDTO sysUserSaveDTO){
         log.info("添加的账户名称: {}; 账户密码: {}", sysUserSaveDTO.getUserAccount(), sysUserSaveDTO.getPassword());
-        return sysUserService.add(sysUserSaveDTO.getUserAccount(), sysUserSaveDTO.getPassword());
+        return getResult(sysUserService.add(sysUserSaveDTO.getUserAccount(), sysUserSaveDTO.getPassword()));
     }
 
     @DeleteMapping("/userId")
@@ -94,7 +95,7 @@ public class SysUserController{
 
     @DeleteMapping("/logout")
     public  Result<Void> logout(@RequestHeader(HttpConstants.AUTHENTICATION) String token){
-        return sysUserService.logout(token);
+        return getResult(sysUserService.logout(token));
     }
 
     @GetMapping("/getLoginIdentity")
