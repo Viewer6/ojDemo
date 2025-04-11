@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class QuestionVO {
+public class QuestionListVO {
     private Long questionId;
 
     private String title;

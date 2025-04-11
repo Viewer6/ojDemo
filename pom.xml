@@ -38,6 +38,7 @@
         <io.jsonwebtoken.version>0.11.5</io.jsonwebtoken.version>
         <jackson-databind.version>2.13.4</jackson-databind.version>
         <hutool-all.version>5.8.26</hutool-all.version>
+        <pagehelper-spring-boot-starter.version>1.4.6</pagehelper-spring-boot-starter.version>
     </properties>
 
     <dependencies>

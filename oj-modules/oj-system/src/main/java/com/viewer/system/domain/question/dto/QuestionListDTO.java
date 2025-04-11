@@ -1,14 +1,12 @@
 package com.viewer.system.domain.question.dto;
 
 
-import io.swagger.v3.oas.models.security.SecurityScheme;
+import com.viewer.common.core.domain.PageQueryDTO;
 import lombok.Data;
 
 @Data
-public class QuestionDTO {
-    private Long questionId;
+public class QuestionListDTO extends PageQueryDTO {
+    private Integer difficulty;
 
     private String title;
-
-    private 
 }

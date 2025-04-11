@@ -14,3 +14,12 @@ spring:
         namespace: 79682ecd-0390-4415-bf6c-f644b8fdb78e
         server-addr: http://localhost:8848
         file-extension: yaml
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**.xml
+  type-aliases-package: com.viewer.system.domain
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+
