@@ -12,7 +12,7 @@ public class QuestionListVO {
 
     private Integer difficulty; // 1-简单 2-中等 3-困难
 
-    private String nickName;
+    private String createName;
 
     private LocalDateTime createTime;
 }

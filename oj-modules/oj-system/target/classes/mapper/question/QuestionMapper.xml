@@ -10,7 +10,7 @@
         tq.question_id,
         tq.title,
         tq.difficulty,
-        ts.nick_name,
+        ts.nick_name as createName,
         tq.create_time
         FROM
         tb_question tq
