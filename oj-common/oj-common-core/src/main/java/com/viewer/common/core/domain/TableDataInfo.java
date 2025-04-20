@@ -29,7 +29,7 @@ public class TableDataInfo {
         return rspData;
     }
 
-    public static TableDataInfo success(List<?> list, int total){
+    public static TableDataInfo success(List<?> list, long total){
         TableDataInfo rspData = new TableDataInfo();
         rspData.setCode(ResultCode.SUCCESS.getCode());
         rspData.setRows(list);

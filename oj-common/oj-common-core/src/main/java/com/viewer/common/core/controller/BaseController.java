@@ -29,7 +29,7 @@ public class BaseController {
         if(CollectionUtil.isEmpty(list)){
             return TableDataInfo.empty();
         }
-        new PageInfo<>(list).getTotal();
-        return TableDataInfo.success(list, list.size());
+//        new PageInfo<>(list).getTotal();
+        return TableDataInfo.success(list, new PageInfo<>(list).getTotal());
     }
 }
