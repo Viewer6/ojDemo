@@ -16,4 +16,6 @@ public interface IQuestionService {
     int add(QuestionAddDTO questionAddDTO);
 
     QuestionDetailVO getDetail(Long queryQuestionId);
+
+    int edit(QuestionEditDTO questionEditDTO);
 }

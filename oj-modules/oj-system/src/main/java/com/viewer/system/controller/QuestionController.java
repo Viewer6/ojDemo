@@ -40,4 +40,9 @@ public class QuestionController extends BaseController {
         log.info("查询题目的id: {}", queryQuestionId);
         return Result.success(questionService.getDetail(queryQuestionId));
     }
+
+    @PutMapping("/edit")
+    public Result<Void> edit(@RequestBody QuestionEditDTO questionEditDTO){
+        return getResult(questionService.edit(questionEditDTO));
+    }
 }

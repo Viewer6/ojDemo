@@ -5,6 +5,8 @@ import lombok.Data;
 
 @Data
 public class QuestionDetailVO {
+    private Long questionId;
+
     private String title;
 
     private Integer difficulty;

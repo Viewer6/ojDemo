@@ -62,4 +62,25 @@ public class QuestionServiceImpl implements IQuestionService {
         BeanUtils.copyProperties(question, questionDetailVO);
         return questionDetailVO;
     }
+
+    @Override
+    public int edit(QuestionEditDTO questionEditDTO) {
+        Question oldQuestion = questionMapper.selectById(questionEditDTO.getQuestionId());
+        if(oldQuestion == null){
+            throw new QuestionException(ResultCode.FAILED_QUESTION_NOT_EXISTS);
+        }
+
+        oldQuestion.setTitle(questionEditDTO.getTitle());
+        oldQuestion.setDifficulty(questionEditDTO.getDifficulty());
+        oldQuestion.setTimeLimit(questionEditDTO.getTimeLimit());
+        oldQuestion.setSpaceLimit(questionEditDTO.getSpaceLimit());
+        oldQuestion.setContent(questionEditDTO.getContent());
+        oldQuestion.setQuestionCase(questionEditDTO.getQuestionCase());
+        oldQuestion.setDefaultCode(questionEditDTO.getDefaultCode());
+        oldQuestion.setMainFuc(questionEditDTO.getMainFuc());
+
+        Question question = new Question();
+        BeanUtils.copyProperties(oldQuestion, question);
+        return questionMapper.updateById(question);
+    }
 }
