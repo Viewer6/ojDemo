@@ -19,6 +19,7 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -49,9 +50,9 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
-    public QuestionDetailVO getDetail(QuestionEditDTO questionEditDTO) {
+    public QuestionDetailVO getDetail(Long queryQuestionId) {
         Question question = questionMapper.selectOne(new LambdaQueryWrapper<Question>()
-                .eq(Question::getQuestionId, questionEditDTO.getQueryQuestionId())
+                .eq(Question::getQuestionId, queryQuestionId)
         );
         if (question == null){
             throw new QuestionException(ResultCode.FAILED_QUESTION_NOT_EXISTS);

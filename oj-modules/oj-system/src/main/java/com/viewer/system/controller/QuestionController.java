@@ -36,8 +36,8 @@ public class QuestionController extends BaseController {
     }
 
     @GetMapping("/getDetail")
-    public Result<QuestionDetailVO> getDetail(@RequestBody QuestionEditDTO questionEditDTO){
-        log.info("查询题目的id: {}", questionEditDTO.getQueryQuestionId());
-        return Result.success(questionService.getDetail(questionEditDTO));
+    public Result<QuestionDetailVO> getDetail(Long queryQuestionId){
+        log.info("查询题目的id: {}", queryQuestionId);
+        return Result.success(questionService.getDetail(queryQuestionId));
     }
 }
