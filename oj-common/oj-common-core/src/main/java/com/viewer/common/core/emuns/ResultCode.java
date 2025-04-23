@@ -21,7 +21,8 @@ public enum ResultCode {
     FAILED_LOGIN (3103, "用户名或密码错误"),
     FAILED_USER_BANNED (3104, "您已被列⼊⿊名单, 请联系管理员."),
     // 题目相关错误码
-    AILED_QUESTION_EXISTS(3201, "题目已存在")
+    AILED_QUESTION_EXISTS(3201, "题目已存在"),
+    FAILED_QUESTION_NOT_EXISTS(3202, "题目不存在")
     ;
 
     private int code; // 状态码

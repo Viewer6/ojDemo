@@ -9,7 +9,9 @@ import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.exception.QuestionException;
 import com.viewer.system.domain.question.Question;
 import com.viewer.system.domain.question.dto.QuestionAddDTO;
+import com.viewer.system.domain.question.dto.QuestionEditDTO;
 import com.viewer.system.domain.question.dto.QuestionListDTO;
+import com.viewer.system.domain.question.vo.QuestionDetailVO;
 import com.viewer.system.domain.question.vo.QuestionListVO;
 import com.viewer.system.mapper.QuestionMapper;
 import com.viewer.system.service.question.IQuestionService;
@@ -44,5 +46,19 @@ public class QuestionServiceImpl implements IQuestionService {
         Question question = new Question();
         BeanUtils.copyProperties(questionAddDTO, question);
         return questionMapper.insert(question);
+    }
+
+    @Override
+    public QuestionDetailVO getDetail(QuestionEditDTO questionEditDTO) {
+        Question question = questionMapper.selectOne(new LambdaQueryWrapper<Question>()
+                .eq(Question::getQuestionId, questionEditDTO.getQueryQuestionId())
+        );
+        if (question == null){
+            throw new QuestionException(ResultCode.FAILED_QUESTION_NOT_EXISTS);
+        }
+
+        QuestionDetailVO questionDetailVO = new QuestionDetailVO();
+        BeanUtils.copyProperties(question, questionDetailVO);
+        return questionDetailVO;
     }
 }

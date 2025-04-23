@@ -4,7 +4,9 @@ import com.viewer.common.core.controller.BaseController;
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.domain.TableDataInfo;
 import com.viewer.system.domain.question.dto.QuestionAddDTO;
+import com.viewer.system.domain.question.dto.QuestionEditDTO;
 import com.viewer.system.domain.question.dto.QuestionListDTO;
+import com.viewer.system.domain.question.vo.QuestionDetailVO;
 import com.viewer.system.domain.question.vo.QuestionListVO;
 import com.viewer.system.service.question.impl.QuestionServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,5 +33,11 @@ public class QuestionController extends BaseController {
     @PostMapping("/add")
     public Result<Void> add(@RequestBody QuestionAddDTO questionAddDTO){
         return getResult(questionService.add(questionAddDTO));
+    }
+
+    @GetMapping("/getDetail")
+    public Result<QuestionDetailVO> getDetail(@RequestBody QuestionEditDTO questionEditDTO){
+        log.info("查询题目的id: {}", questionEditDTO.getQueryQuestionId());
+        return Result.success(questionService.getDetail(questionEditDTO));
     }
 }
