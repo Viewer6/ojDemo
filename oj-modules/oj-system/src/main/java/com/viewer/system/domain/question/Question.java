@@ -27,5 +27,5 @@ public class Question extends BaseEntity {
 
     private String defaultCode;
 
-    private String mainFunc;
+    private String mainFuc;
 }

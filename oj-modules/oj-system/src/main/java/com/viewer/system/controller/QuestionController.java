@@ -3,15 +3,14 @@ package com.viewer.system.controller;
 import com.viewer.common.core.controller.BaseController;
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.domain.TableDataInfo;
+import com.viewer.system.domain.question.dto.QuestionAddDTO;
 import com.viewer.system.domain.question.dto.QuestionListDTO;
 import com.viewer.system.domain.question.vo.QuestionListVO;
 import com.viewer.system.service.question.impl.QuestionServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +26,10 @@ public class QuestionController extends BaseController {
     @GetMapping("/getList")
     public TableDataInfo getList(QuestionListDTO questionListDTO){
         return getTableDataInfo(questionService.getList(questionListDTO));
+    }
+
+    @PostMapping("/add")
+    public Result<Void> add(@RequestBody QuestionAddDTO questionAddDTO){
+        return getResult(questionService.add(questionAddDTO));
     }
 }

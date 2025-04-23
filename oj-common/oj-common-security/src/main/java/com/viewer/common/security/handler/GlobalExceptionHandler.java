@@ -2,6 +2,7 @@ package com.viewer.common.security.handler;
 
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.emuns.ResultCode;
+import com.viewer.common.core.exception.QuestionException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -33,6 +34,13 @@ public class GlobalExceptionHandler
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}', 发生算术异常", requestURI);
         return Result.fail(ResultCode.ERROR, "请求地址'" + requestURI + "', 发生算术异常");
+    }
+
+    @ExceptionHandler(QuestionException.class)
+    public Result<?> handleArithmeticException(QuestionException e, HttpServletRequest request){
+        String requestURI = request.getRequestURI();
+        log.error("请求地址'{}', {}", requestURI, e.getMsg());
+        return Result.fail(e.getCode(), e.getMsg());
     }
 
     /**
