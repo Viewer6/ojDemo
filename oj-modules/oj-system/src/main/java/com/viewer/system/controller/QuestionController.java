@@ -45,4 +45,9 @@ public class QuestionController extends BaseController {
     public Result<Void> edit(@RequestBody QuestionEditDTO questionEditDTO){
         return getResult(questionService.edit(questionEditDTO));
     }
+
+    @DeleteMapping("/delete")
+    public Result<Void> delete(Long deleteQuestionId){
+        return getResult(questionService.delete(deleteQuestionId));
+    }
 }

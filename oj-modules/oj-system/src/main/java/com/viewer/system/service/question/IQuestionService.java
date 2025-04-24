@@ -18,4 +18,6 @@ public interface IQuestionService {
     QuestionDetailVO getDetail(Long queryQuestionId);
 
     int edit(QuestionEditDTO questionEditDTO);
+
+    int delete(Long deleteQuestionId);
 }

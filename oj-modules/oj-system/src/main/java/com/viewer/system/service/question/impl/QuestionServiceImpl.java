@@ -83,4 +83,14 @@ public class QuestionServiceImpl implements IQuestionService {
         BeanUtils.copyProperties(oldQuestion, question);
         return questionMapper.updateById(question);
     }
+
+    @Override
+    public int delete(Long deleteQuestionId) {
+        Question question = questionMapper.selectById(deleteQuestionId);
+        if(question == null){
+            throw new QuestionException(ResultCode.FAILED_QUESTION_NOT_EXISTS);
+        }
+
+        return questionMapper.deleteById(deleteQuestionId);
+    }
 }
