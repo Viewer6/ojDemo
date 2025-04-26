@@ -71,3 +71,44 @@ INSERT INTO tb_question (
       (11, '验证回文串', 1, 1, 128, '判断是否为回文字符串，忽略非字母数字字符和大小写。', '"A man, a plan, a canal: Panama" -> True', 'def isPalindrome(s):', 'print(isPalindrome("A man, a plan, a canal: Panama"))', 1002, NOW(), NULL, NULL),
       (12, '二分查找', 1, 1, 128, '实现一个二分查找算法。', '[1,2,3,4,5],3 -> 2', 'def binarySearch(nums, target):', 'print(binarySearch([1,2,3,4,5],3))', 1003, NOW(), NULL, NULL);
 
+# --竞赛管理
+# B端：列表、新增、编辑、删除、发布、撤销发布
+#
+# C端：列表（未开始、历史） 、报名参赛、我的比赛、参加竞赛（竞赛倒计时、竞赛内题目切换、完成竞赛） 、竞赛练习、查看排名、我的消息
+# 是否开赛 不需要加在数据库中，我们实时计算就可以
+# 报名参赛：未开始、未报名
+create table tb_exam (
+                         exam_id  bigint unsigned not null comment '竞赛id（主键）',
+                         title varchar(50) not null comment '竞赛标题',
+                         start_time datetime not null comment '竞赛开始时间',
+                         end_time datetime not null comment '竞赛结束时间',
+                         status tinyint not null default '0' comment '是否发布 0：未发布  1：已发布',
+#     --exam_question   这个竞赛下所有的题目都存进来并且用&分隔开   10
+                         create_by    bigint unsigned not null  comment '创建人',
+                         create_time  datetime not null comment '创建时间',
+                         update_by    bigint unsigned  comment '更新人',
+                         update_time  datetime comment '更新时间',
+                         primary key(exam_id)
+)
+
+#     题目和竞赛之间是多对一的关系
+# 题目和竞赛的关系表
+# 题目id：  1    2   3  4
+# 竞赛id：999
+# 记录1： 主键id   1    999
+# 记录2： 主键id   2    999
+# 记录3： 主键id   3    999
+# 记录3： 主键id   4    999
+select * from  tb_exam_question   where exam_id = 1;
+delete  from tb_exam_question where exam_id = 1;
+create table tb_exam_question (
+                                  exam_question_id  bigint unsigned not null comment '竞赛题目关系id（主键）',
+                                  question_id  bigint unsigned not null comment '题目id（主键）',
+                                  exam_id  bigint unsigned not null comment '竞赛id（主键）',
+                                  question_order int not null comment '题目顺序',
+                                  create_by    bigint unsigned not null  comment '创建人',
+                                  create_time  datetime not null comment '创建时间',
+                                  update_by    bigint unsigned  comment '更新人',
+                                  update_time  datetime comment '更新时间',
+                                  primary key(exam_question_id)
+)
