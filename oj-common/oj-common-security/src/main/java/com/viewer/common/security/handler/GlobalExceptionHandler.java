@@ -2,6 +2,7 @@ package com.viewer.common.security.handler;
 
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.emuns.ResultCode;
+import com.viewer.common.core.exception.ExamException;
 import com.viewer.common.core.exception.QuestionException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +38,14 @@ public class GlobalExceptionHandler
     }
 
     @ExceptionHandler(QuestionException.class)
-    public Result<?> handleArithmeticException(QuestionException e, HttpServletRequest request){
+    public Result<?> handleQuestionException(QuestionException e, HttpServletRequest request){
+        String requestURI = request.getRequestURI();
+        log.error("请求地址'{}', {}", requestURI, e.getMsg());
+        return Result.fail(e.getCode(), e.getMsg());
+    }
+
+    @ExceptionHandler(ExamException.class)
+    public Result<?> handleExamException(ExamException e, HttpServletRequest request){
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}', {}", requestURI, e.getMsg());
         return Result.fail(e.getCode(), e.getMsg());
