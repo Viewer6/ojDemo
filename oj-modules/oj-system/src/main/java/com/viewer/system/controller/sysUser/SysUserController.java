@@ -1,4 +1,4 @@
-package com.viewer.system.controller;
+package com.viewer.system.controller.sysUser;
 
 
 import com.viewer.common.core.constants.HttpConstants;

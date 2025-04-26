@@ -1,4 +1,4 @@
-package com.viewer.system.controller;
+package com.viewer.system.controller.question;
 
 import com.viewer.common.core.controller.BaseController;
 import com.viewer.common.core.domain.Result;

@@ -3,8 +3,6 @@ package com.viewer.system.service.question.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.viewer.common.core.domain.TableDataInfo;
 import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.exception.QuestionException;
 import com.viewer.system.domain.question.Question;
@@ -13,13 +11,11 @@ import com.viewer.system.domain.question.dto.QuestionEditDTO;
 import com.viewer.system.domain.question.dto.QuestionListDTO;
 import com.viewer.system.domain.question.vo.QuestionDetailVO;
 import com.viewer.system.domain.question.vo.QuestionListVO;
-import com.viewer.system.mapper.QuestionMapper;
+import com.viewer.system.mapper.question.QuestionMapper;
 import com.viewer.system.service.question.IQuestionService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.viewer.system.mapper;
+package com.viewer.system.mapper.sysUser;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.viewer.system.domain.sysUser.SysUser;

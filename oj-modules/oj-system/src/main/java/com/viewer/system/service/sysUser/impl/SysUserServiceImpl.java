@@ -12,7 +12,7 @@ import com.viewer.common.core.emuns.UserIdentity;
 import com.viewer.common.redis.service.RedisService;
 import com.viewer.common.security.service.TokenService;
 import com.viewer.system.domain.sysUser.SysUser;
-import com.viewer.system.mapper.SysUserMapper;
+import com.viewer.system.mapper.sysUser.SysUserMapper;
 import com.viewer.system.service.sysUser.ISysUserService;
 import com.viewer.common.core.utils.BCryptUtils;
 import jakarta.annotation.Resource;
