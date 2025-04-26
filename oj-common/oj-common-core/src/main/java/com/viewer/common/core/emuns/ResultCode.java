@@ -22,7 +22,12 @@ public enum ResultCode {
     FAILED_USER_BANNED (3104, "您已被列⼊⿊名单, 请联系管理员."),
     // 题目相关错误码
     AILED_QUESTION_EXISTS(3201, "题目已存在"),
-    FAILED_QUESTION_NOT_EXISTS(3202, "题目不存在")
+    FAILED_QUESTION_NOT_EXISTS(3202, "题目不存在"),
+
+    // 竞赛相关错误码
+    EXAM_ALREADY_EXISTS (3301, "竞赛已存在"),
+    EXAM_START_TIME_BEFORE_CURRENT_TIME(3302, "竞赛开始时间不能早于当前时间"),
+    EXAM_START_TIME_AFTER_END_TIME(3302, "竞赛开始时间不能晚于当前时间"),
     ;
 
     private int code; // 状态码
