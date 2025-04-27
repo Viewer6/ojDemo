@@ -27,7 +27,9 @@ public enum ResultCode {
     // 竞赛相关错误码
     EXAM_ALREADY_EXISTS (3301, "竞赛已存在"),
     EXAM_START_TIME_BEFORE_CURRENT_TIME(3302, "竞赛开始时间不能早于当前时间"),
-    EXAM_START_TIME_AFTER_END_TIME(3302, "竞赛开始时间不能晚于当前时间"),
+    EXAM_START_TIME_AFTER_END_TIME(3303, "竞赛开始时间不能晚于当前时间"),
+
+    EXAM_NOT_EXISTS(3304, "竞赛不存在"),
     ;
 
     private int code; // 状态码
