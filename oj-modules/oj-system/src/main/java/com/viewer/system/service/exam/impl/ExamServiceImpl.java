@@ -46,7 +46,7 @@ public class ExamServiceImpl extends ServiceImpl<ExamQuestionMapper, ExamQuestio
     }
 
     @Override
-    public int add(ExamAddDTO examAddDTO) {
+    public String add(ExamAddDTO examAddDTO) {
         List<Exam> exams = examMapper.selectList(new LambdaQueryWrapper<Exam>()
                 .eq(Exam::getTitle, examAddDTO.getTitle()));
         if(CollectionUtil.isNotEmpty(exams)){
@@ -62,7 +62,8 @@ public class ExamServiceImpl extends ServiceImpl<ExamQuestionMapper, ExamQuestio
         Exam exam = new Exam();
         BeanUtils.copyProperties(examAddDTO, exam);
 
-        return examMapper.insert(exam);
+        examMapper.insert(exam);
+        return exam.getExamId().toString();
     }
 
     @Override

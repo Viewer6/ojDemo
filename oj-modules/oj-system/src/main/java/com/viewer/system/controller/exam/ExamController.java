@@ -27,8 +27,8 @@ public class ExamController extends BaseController {
     }
 
     @PostMapping("/add")
-    public Result<Void> add(@RequestBody ExamAddDTO examAddDTO){
-        return getResult(examService.add(examAddDTO));
+    public Result<String> add(@RequestBody ExamAddDTO examAddDTO){
+        return Result.success(examService.add(examAddDTO));
     }
 
     @PostMapping("/add/question")

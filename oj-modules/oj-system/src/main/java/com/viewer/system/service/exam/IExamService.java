@@ -10,7 +10,7 @@ import java.util.List;
 public interface IExamService {
     List<ExamListVO> getList(ExamQueryDTO examQueryDTO);
 
-    int add(ExamAddDTO examAddDTO);
+    String add(ExamAddDTO examAddDTO);
 
     boolean addQuestion(ExamQuestionAddDTO questionAddDTO);
 }
