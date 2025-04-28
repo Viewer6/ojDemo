@@ -12,8 +12,10 @@ import com.viewer.system.domain.exam.ExamQuestion;
 import com.viewer.system.domain.exam.dto.ExamAddDTO;
 import com.viewer.system.domain.exam.dto.ExamQueryDTO;
 import com.viewer.system.domain.exam.dto.ExamQuestionAddDTO;
+import com.viewer.system.domain.exam.vo.ExamDetailVO;
 import com.viewer.system.domain.exam.vo.ExamListVO;
 import com.viewer.system.domain.question.Question;
+import com.viewer.system.domain.question.vo.QuestionListVO;
 import com.viewer.system.mapper.exam.ExamMapper;
 import com.viewer.system.mapper.exam.ExamQuestionMapper;
 import com.viewer.system.mapper.question.QuestionMapper;
@@ -68,10 +70,8 @@ public class ExamServiceImpl extends ServiceImpl<ExamQuestionMapper, ExamQuestio
 
     @Override
     public boolean addQuestion(ExamQuestionAddDTO questionAddDTO) {
-        Exam exam = examMapper.selectById(questionAddDTO.getExamId());
-        if(exam == null){
-            throw new ExamException(ResultCode.EXAM_NOT_EXISTS);
-        }
+
+        checkExamId(questionAddDTO.getExamId());
 
         Set<Long> questionIds = questionAddDTO.getQuestionIdSet();
         if(CollectionUtil.isEmpty(questionIds)){
@@ -87,12 +87,36 @@ public class ExamServiceImpl extends ServiceImpl<ExamQuestionMapper, ExamQuestio
         List<ExamQuestion> examQuestionList = new ArrayList<>();
         for (Long questionId : questionIds) {
             ExamQuestion examQuestion = new ExamQuestion();
-            examQuestion.setExamId(exam.getExamId());
+            examQuestion.setExamId(questionAddDTO.getExamId());
             examQuestion.setQuestionId(questionId);
             examQuestion.setQuestionOrder(num++);
             examQuestionList.add(examQuestion);
         }
 
         return saveBatch(examQuestionList);
+    }
+
+    @Override
+    public ExamDetailVO detail(Long examId) {
+        checkExamId(examId);
+
+        ExamDetailVO examDetailVO = new ExamDetailVO();
+        Exam exam = examMapper.selectById(examId);
+        BeanUtils.copyProperties(exam, examDetailVO);
+
+        List<QuestionListVO> questionVOList = examQuestionMapper.selectExamQuestionList(examId);
+        if (CollectionUtil.isEmpty(questionVOList)) {
+            return examDetailVO;
+        }
+        examDetailVO.setExamQuestionList(questionVOList);
+        return examDetailVO;
+
+    }
+
+    private void checkExamId(Long examId){
+        Exam exam = examMapper.selectById(examId);
+        if(exam == null){
+            throw new ExamException(ResultCode.EXAM_NOT_EXISTS);
+        }
     }
 }

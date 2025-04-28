@@ -6,6 +6,7 @@ import com.viewer.common.core.domain.TableDataInfo;
 import com.viewer.system.domain.exam.dto.ExamAddDTO;
 import com.viewer.system.domain.exam.dto.ExamQueryDTO;
 import com.viewer.system.domain.exam.dto.ExamQuestionAddDTO;
+import com.viewer.system.domain.exam.vo.ExamDetailVO;
 import com.viewer.system.service.exam.impl.ExamServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -34,5 +35,10 @@ public class ExamController extends BaseController {
     @PostMapping("/add/question")
     public Result<Void> addQuestion(@RequestBody ExamQuestionAddDTO questionAddDTO){
         return getResult(examService.addQuestion(questionAddDTO));
+    }
+
+    @GetMapping("/detail")
+    public Result<ExamDetailVO> detail(Long examId){
+        return Result.success(examService.detail(examId));
     }
 }
