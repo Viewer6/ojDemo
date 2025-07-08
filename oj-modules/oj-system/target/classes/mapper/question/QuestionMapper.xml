@@ -23,6 +23,11 @@
             <if test="title != null and title != ''">
                 AND tq.title LIKE CONCAT('%', #{title}, '%')
             </if>
+            <if test="filterQuestionIds != null and !filterQuestionIds.isEmpty()">
+                <foreach collection="filterQuestionIds" open=" AND tq.question_id NOT IN( " close=" ) " item="id" separator=",">
+                    #{id}
+                </foreach>
+            </if>
         </where>
         ORDER BY tq.create_time DESC
     </select>

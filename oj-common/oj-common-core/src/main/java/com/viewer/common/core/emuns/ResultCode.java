@@ -30,6 +30,11 @@ public enum ResultCode {
     EXAM_START_TIME_AFTER_END_TIME(3303, "竞赛开始时间不能晚于当前时间"),
 
     EXAM_NOT_EXISTS(3304, "竞赛不存在"),
+
+    EXAM_STARTED(3305, "竞赛已开始, 不能进行修改"),
+    EXAM_IS_PUBLISH(3306, "竞赛已发布, 不能进行修改"),
+
+    EXAM_NOT_HAS_QUESTION(3307, "竞赛没有题目"),
     ;
 
     private int code; // 状态码

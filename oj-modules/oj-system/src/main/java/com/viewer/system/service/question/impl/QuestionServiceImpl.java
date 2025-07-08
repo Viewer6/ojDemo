@@ -1,8 +1,10 @@
 package com.viewer.system.service.question.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
+import com.viewer.common.core.constants.Constants;
 import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.exception.QuestionException;
 import com.viewer.system.domain.question.Question;
@@ -17,7 +19,10 @@ import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionServiceImpl implements IQuestionService {
@@ -26,6 +31,17 @@ public class QuestionServiceImpl implements IQuestionService {
     private QuestionMapper questionMapper;
     @Override
     public List<QuestionListVO> getList(QuestionListDTO questionListDTO) {
+        String filterQuestionIdsStr = questionListDTO.getFilterQuestionIdsStr();
+        if(StrUtil.isNotEmpty(filterQuestionIdsStr)){
+            String[] split = filterQuestionIdsStr.split(Constants.SPLIT_SMC);
+            // 使用stream流对数据进行转换
+            Set<Long> filterQuestionIds = Arrays.stream(split)
+                    .map(Long::valueOf)
+                    .collect(Collectors.toSet());
+
+            questionListDTO.setFilterQuestionIds(filterQuestionIds);
+        }
+
         PageHelper.startPage(questionListDTO.getPageNum(), questionListDTO.getPageSize());
         return questionMapper.selectQuestionList(questionListDTO);
     }
