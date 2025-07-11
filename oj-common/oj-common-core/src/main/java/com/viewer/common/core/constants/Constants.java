@@ -7,4 +7,7 @@ public class Constants {
 
     public static final Integer FALSE = 0;
 
+    // 验证码
+    public static final String DEFAULT_CODE = "1";
+
 }

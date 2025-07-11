@@ -4,6 +4,7 @@ import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.exception.ExamException;
 import com.viewer.common.core.exception.QuestionException;
+import com.viewer.common.core.exception.UserException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -46,6 +47,13 @@ public class GlobalExceptionHandler
 
     @ExceptionHandler(ExamException.class)
     public Result<?> handleExamException(ExamException e, HttpServletRequest request){
+        String requestURI = request.getRequestURI();
+        log.error("请求地址'{}', {}", requestURI, e.getMsg());
+        return Result.fail(e.getCode(), e.getMsg());
+    }
+
+    @ExceptionHandler(UserException.class)
+    public Result<?> handleUserException(UserException e, HttpServletRequest request){
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}', {}", requestURI, e.getMsg());
         return Result.fail(e.getCode(), e.getMsg());

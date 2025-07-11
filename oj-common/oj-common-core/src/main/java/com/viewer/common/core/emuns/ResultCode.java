@@ -20,6 +20,15 @@ public enum ResultCode {
     FAILED_USER_NOT_EXISTS (3102, "用户不存在"),
     FAILED_LOGIN (3103, "用户名或密码错误"),
     FAILED_USER_BANNED (3104, "您已被列⼊⿊名单, 请联系管理员."),
+
+    FAILED_USER_PHONE(3105, "用户号码错误"),
+
+    FAILED_TIME_LIMIT(3107, "验证码获取次数达上线, 请明天再获取"),
+    FAILED_FREQUENT(3106, "验证码获取频繁, 请稍后重试"),
+    FAILED_CODE(3108, "验证码错误"),
+
+    FAILED_INVALID_CODE(3109, "验证码无效"),
+
     // 题目相关错误码
     AILED_QUESTION_EXISTS(3201, "题目已存在"),
     FAILED_QUESTION_NOT_EXISTS(3202, "题目不存在"),

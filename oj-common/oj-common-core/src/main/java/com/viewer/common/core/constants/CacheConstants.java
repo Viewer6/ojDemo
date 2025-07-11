@@ -6,4 +6,8 @@ public class CacheConstants {
 
     public final static long EXP = 720;
     public static final long REFRESH_TIME = 360;
+
+    public final static String PHONE_CODE_KEY = "p:c:";
+
+    public final static String CODE_TIME_KEY = "c:t:";
 }

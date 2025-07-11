@@ -137,7 +137,6 @@ create table tb_user(
                         code  char(6) comment '验证码',
                         email varchar(20) comment '邮箱',
                         wechat varchar(20) comment '微信号',
-    --AAAA  varchar(50) comment '学校/专业',  学校  & 专业
     school_name  varchar(20) comment '学校',
     major_name  varchar(20) comment '专业',
     introduce varchar(100) comment '个人介绍',

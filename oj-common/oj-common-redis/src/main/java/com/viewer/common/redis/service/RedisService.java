@@ -184,6 +184,15 @@ public class RedisService {
         redisTemplate.opsForHash().put(key, hKey, value);
     }
     /**
+     * 计数加一
+     *
+     * @param key
+     * @return
+     */
+    public Long increment(final String key) {
+        return redisTemplate.opsForValue().increment(key);
+    }
+    /**
      * 缓存Map
      *
      * @param key
