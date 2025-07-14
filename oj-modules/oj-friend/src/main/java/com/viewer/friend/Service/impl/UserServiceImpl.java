@@ -5,7 +5,10 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.viewer.common.core.constants.CacheConstants;
 import com.viewer.common.core.constants.Constants;
+import com.viewer.common.core.constants.HttpConstants;
+import com.viewer.common.core.domain.LoginUser;
 import com.viewer.common.core.domain.Result;
+import com.viewer.common.core.domain.vo.LoginUserIdVO;
 import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.emuns.UserIdentity;
 import com.viewer.common.core.emuns.UserStatus;
@@ -15,6 +18,7 @@ import com.viewer.common.security.service.TokenService;
 import com.viewer.friend.Service.IUserService;
 import com.viewer.friend.domain.User;
 import com.viewer.friend.domain.dot.UserDTO;
+import com.viewer.friend.domain.vo.UserInfoVO;
 import com.viewer.friend.mapper.UserMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -101,14 +105,38 @@ public class UserServiceImpl implements IUserService {
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getPhone, userDTO.getPhone()));
         if(user == null){ // 首次登录(注册)
+            String nickName = RandomUtil.randomString(6);
+
             user = new User();
             user.setPhone(userDTO.getPhone());
             user.setStatus(UserStatus.NORMAL.getValue());
+            user.setHeadImage(Constants.DEFAULT_HEAD_IMAGE);
+            user.setNickName(nickName);
             userMapper.insert(user);
         }
 
-        String token = tokenService.getToken(user.getUserId(), secret, UserIdentity.ORDINARY.getValue(), user.getNickName());
+        String token = tokenService.getToken(user.getUserId(), secret, UserIdentity.ORDINARY.getValue(), user.getNickName(), user.getHeadImage());
         return Result.success(token);
+    }
+
+    @Override
+    public boolean logout(String token) {
+        if(StrUtil.isNotEmpty(token) && token.startsWith(HttpConstants.PREFIX)){
+            token = token.replaceFirst(HttpConstants.PREFIX, "");
+        }
+        return tokenService.logout(token, secret);
+    }
+
+    @Override
+    public Result<UserInfoVO> getUserInfo(String token) {
+        if(StrUtil.isNotEmpty(token) && token.startsWith(HttpConstants.PREFIX)){
+            token = token.replaceFirst(HttpConstants.PREFIX, "");
+        }
+        LoginUser loginUser = tokenService.getIdentity(token, secret);
+        if(loginUser == null){
+            return Result.fail(null);
+        }
+        return Result.success(new UserInfoVO(loginUser.getNickName(), loginUser.getHeadImage()));
     }
 
     private String getCodeTimesKey(String phone) {
