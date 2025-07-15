@@ -206,5 +206,35 @@ public class RedisService {
     public Long deleteCacheMapValue(final String key, final String hKey) {
         return redisTemplate.opsForHash().delete(key, hKey);
     }
+
+    /**
+     * 批量获取redis中数据
+     * @param keyList 关键字列表
+     * @param clazz 获取数据类型转换
+     * @return
+     * @param <T>
+     */
+    public <T> List<T> multiGet(final List<String> keyList, Class<T> clazz) {
+        List list = redisTemplate.opsForValue().multiGet(keyList);
+        if (list == null || list.size() <= 0) {
+            return null;
+        }
+        List<T> result = new ArrayList<>();
+        // 数据类型转换
+        for (Object o : list) {
+            result.add(JSON.parseObject(String.valueOf(o), clazz));
+        }
+        return result;
+    }
+
+    /**
+     * 批量往redis里面插入数据
+     * @param map
+     * @param <K>
+     * @param <V>
+     */
+    public <K, V> void multiSet(Map<? extends K, ? extends V> map) {
+        redisTemplate.opsForValue().multiSet(map);
+    }
 }
 

@@ -18,12 +18,14 @@ import com.viewer.system.domain.exam.vo.ExamDetailVO;
 import com.viewer.system.domain.exam.vo.ExamListVO;
 import com.viewer.system.domain.question.Question;
 import com.viewer.system.domain.question.vo.QuestionListVO;
+import com.viewer.system.manager.ExamCacheManager;
 import com.viewer.system.mapper.exam.ExamMapper;
 import com.viewer.system.mapper.exam.ExamQuestionMapper;
 import com.viewer.system.mapper.question.QuestionMapper;
 import com.viewer.system.service.exam.IExamService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,6 +44,9 @@ public class ExamServiceImpl extends ServiceImpl<ExamQuestionMapper, ExamQuestio
 
     @Resource(name = "examQuestionMapper")
     private ExamQuestionMapper examQuestionMapper;
+
+    @Autowired
+    private ExamCacheManager examCacheManager;
 
     @Override
     public List<ExamListVO> getList(ExamQueryDTO examQueryDTO) {
@@ -163,6 +168,13 @@ public class ExamServiceImpl extends ServiceImpl<ExamQuestionMapper, ExamQuestio
         }
 
         exam.setStatus(status);
+
+        // 操作redis中数据
+        if (status == 1) {
+            examCacheManager.addCache(exam);
+        } else {
+            examCacheManager.deleteCache(examId);
+        }
         return examMapper.updateById(exam);
     }
 
