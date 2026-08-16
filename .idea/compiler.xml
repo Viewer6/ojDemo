@@ -2,7 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -11,18 +10,26 @@
         <module name="oj-friend" />
         <module name="oj-judge" />
         <module name="oj-common-swagger" />
-        <module name="oj-system" />
         <module name="oj-common-core" />
-        <module name="oj-job" />
-        <module name="oj-common-security" />
+        <module name="oj-system" />
         <module name="oj-common-redis" />
+        <module name="oj-common-security" />
+        <module name="oj-job" />
         <module name="oj-gateway" />
+      </profile>
+      <profile name="Annotation profile for oj_common_message" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="oj_common_message" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="oj-common" options="-parameters" />
       <module name="oj-common-core" options="-parameters" />
       <module name="oj-common-mybatis" options="-parameters" />
       <module name="oj-common-redis" options="-parameters" />
@@ -33,7 +40,7 @@
       <module name="oj-job" options="-parameters" />
       <module name="oj-judge" options="-parameters" />
       <module name="oj-system" options="-parameters" />
-      <module name="ojDemo" options="-parameters" />
+      <module name="oj_common_message" options="-parameters" />
     </option>
   </component>
 </project>

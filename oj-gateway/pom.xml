@@ -54,11 +54,11 @@
             <artifactId>hutool-all</artifactId>
             <version>${hutool-all.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>oj-common-core</artifactId>
-            <version>${oj-common-core.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.example</groupId>-->
+<!--            <artifactId>oj-common-core</artifactId>-->
+<!--            <version>${oj-common-core.version}</version>-->
+<!--        </dependency>-->
 
 
     </dependencies>

@@ -13,7 +13,8 @@ import java.util.List;
 public class IgnoreWhiteProperties
 {
     /**
-     * 放⾏⽩名单配置，⽹关不校验此处的⽩名单
+     * 放⾏⽩名单配置，⽹关不校验此处的⽩名单security:
+     *   ignore:
      */
     private List<String> whites = new ArrayList<>();
     public List<String> getWhites()

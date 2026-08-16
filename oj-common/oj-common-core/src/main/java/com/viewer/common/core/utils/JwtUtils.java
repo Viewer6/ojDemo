@@ -31,7 +31,7 @@ public class JwtUtils {
      * @return 数据
      */
     public static Claims parseToken(String token, String key){
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
     }
 
     public static String getUserKey(Claims claims) {
@@ -55,11 +55,12 @@ public class JwtUtils {
      */
 //    private static final SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 //    public static void main(String[] args) {
-//        String key = "sdfxdfssdfzfew4r5dsfgfr5tr6ydgAWSe4estyhxdrtw3sa4e3rdcfvssxer434sdzdryc334se34sdd3sd45gdd4xzsdr4dfd5rtxcw3";
+//        String key = "RuKgPbRZIv79sx1oEFahdkxhdnejcjfh9zFZH3gx7xJkknsTq6lDEr8gaR7eL9LZUZz5DHpLFaKnUVap6LUURK0ly08Q4cuUqaA==";
 //        Map<String, Object> claim = new HashMap<>();
 //        claim.put("userId", 12345678L);
 //        String token = createToken(claim, key);
-//        System.out.println(token);
+//        System.out.println("token:                   "+token);
+//        System.out.println();
 //        System.out.println(parseToken(token, key));
 //        System.out.println(key);
 //    }

@@ -25,4 +25,13 @@ public class BCryptUtils {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
+    /**
+     * 给密码加密
+     */
+    public static void main(String[] args) {
+        String password = "1";
+        String password1 = encryptPassword(password);
+        System.out.println("加密后的密码: " + password1);
+    }
+
 }

@@ -1,1 +1,17 @@
 *.log
+
+# IDEA
+.idea/
+*.iml
+*.iws
+
+# Maven
+target/
+
+# 日志
+logs/
+*.log
+
+# 前端vue
+node_modules/
+dist/
