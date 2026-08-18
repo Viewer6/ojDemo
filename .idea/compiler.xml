@@ -10,21 +10,13 @@
         <module name="oj-friend" />
         <module name="oj-judge" />
         <module name="oj-common-swagger" />
+        <module name="oj_common_message" />
         <module name="oj-common-core" />
         <module name="oj-system" />
         <module name="oj-common-redis" />
         <module name="oj-common-security" />
         <module name="oj-job" />
         <module name="oj-gateway" />
-      </profile>
-      <profile name="Annotation profile for oj_common_message" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="oj_common_message" />
       </profile>
     </annotationProcessing>
   </component>
