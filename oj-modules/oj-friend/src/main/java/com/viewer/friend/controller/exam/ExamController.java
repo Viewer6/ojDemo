@@ -21,8 +21,8 @@ public class ExamController extends BaseController {
     @Resource(name = "examServiceImpl")
     private ExamServiceImpl examService;
 
-    @GetMapping("/list")
-    public TableDataInfo getList(@RequestBody ExamQueryDTO examQueryDTO){
+    @GetMapping("/semiLogin/list")
+    public TableDataInfo getList(ExamQueryDTO examQueryDTO){
         return getTableDataInfo(examService.list(examQueryDTO));
     }
 
