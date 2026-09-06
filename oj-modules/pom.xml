@@ -81,11 +81,7 @@
             <version>${mybatis-plus.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.example</groupId>
-            <artifactId>oj-common-message</artifactId>
-            <version>${oj-common-message.version}</version>
-        </dependency>
+
 
         <dependency>
             <groupId>com.mysql</groupId>

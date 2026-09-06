@@ -23,5 +23,11 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>oj-common-message</artifactId>
+            <version>${oj-common-message.version}</version>
+        </dependency>
     </dependencies>
 </project>
