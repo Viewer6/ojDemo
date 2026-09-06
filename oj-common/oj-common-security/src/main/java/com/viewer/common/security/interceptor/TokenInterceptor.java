@@ -20,6 +20,10 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = getToken(request);
+        if(token == null || token.isBlank()){
+            // 无token，直接放行；
+            return true;
+        }
         tokenService.extendToken(token, secret);
         return true;
     }
