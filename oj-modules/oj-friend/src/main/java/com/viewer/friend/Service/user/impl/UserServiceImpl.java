@@ -12,6 +12,7 @@ import com.viewer.common.core.emuns.ResultCode;
 import com.viewer.common.core.emuns.UserIdentity;
 import com.viewer.common.core.emuns.UserStatus;
 import com.viewer.common.core.exception.UserException;
+import com.viewer.common.message.service.AliSmsService;
 import com.viewer.common.redis.service.RedisService;
 import com.viewer.common.security.service.TokenService;
 import com.viewer.friend.Service.user.IUserService;
@@ -44,16 +45,19 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private TokenService tokenService;
 
-    @Value("${sms.code-expiration:5}")
-    private Long phoneCodeExpiration;
+    @Autowired
+    private AliSmsService aliSmsService;
 
-    @Value("${sms.send-limit:3}")
-    private Integer sendLimit;
+    @Value("${sms.code-expiration}")
+    private Long phoneCodeExpiration; // 验证码时效
+
+    @Value("${sms.send-limit}")
+    private Integer sendLimit; // 发送次数限制
 
     @Value("${jwt.secret}")
     private String secret; // 密钥
 
-    @Value("${sms.is-send:false}")
+    @Value("${sms.is-send}")
     private boolean isSend;  //开关打开：true  开关关闭false
 
     @Override
@@ -73,7 +77,7 @@ public class UserServiceImpl implements IUserService {
         }
 
 
-        String code = isSend ? RandomUtil.randomNumbers(6) : Constants.DEFAULT_CODE;  // 生成6位验证码
+        String code = isSend ? RandomUtil.randomNumbers(6) : Constants.DEFAULT_CODE;  // 生成6位验证码 : 默认密码：123456
         redisService.setCacheObject(phoneCodeKey, code, phoneCodeExpiration, TimeUnit.MINUTES);
 
         // 发送次数判定
@@ -84,6 +88,7 @@ public class UserServiceImpl implements IUserService {
 
         if (isSend) {
             // todo: 发送验证码服务
+            aliSmsService.sendMobileCode(userDTO.getPhone(), code);
             log.info("验证码: {}", code);
             redisService.increment(codeTimesKey);
         }

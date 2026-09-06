@@ -8,7 +8,7 @@ public class Constants {
     public static final Integer FALSE = 0;
 
     // 验证码
-    public static final String DEFAULT_CODE = "1";
+    public static final String DEFAULT_CODE = "123456";
 
     public static final String DEFAULT_HEAD_IMAGE = "E:\\Programing\\ojDemo-vue-c\\src\\assets\\images\\headimage.jpg";
 
