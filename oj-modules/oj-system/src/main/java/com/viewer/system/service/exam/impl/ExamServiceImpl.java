@@ -141,40 +141,37 @@ public class ExamServiceImpl extends ServiceImpl<ExamQuestionMapper, ExamQuestio
                 .eq(Exam::getExamId, examId));
     }
 
+    /**
+     * 发布竞赛和撤销发布竞赛
+     */
     @Override
     public int publish(Long examId) {
-        return publishOperation(examId, 1);
+        Exam exam = getExam(examId);
+        //select count(0) from tb_exam_question where exam_id = #{examId}
+        if (exam.getEndTime().isBefore(LocalDateTime.now())) {
+            throw new ExamException(ResultCode.EXAM_IS_FINISH);
+        }
+        Long count = examQuestionMapper
+                .selectCount(new LambdaQueryWrapper<ExamQuestion>().eq(ExamQuestion::getExamId, examId));
+        if (count == null || count <= 0) {
+            throw new ExamException(ResultCode.EXAM_NOT_HAS_QUESTION);
+        }
+        exam.setStatus(Constants.TRUE);
+
+        //要将新发布的竞赛数据存储到redis   e:t:l  e:d:examId
+        examCacheManager.addCache(exam);
+        return examMapper.updateById(exam);
     }
 
     @Override
     public int cancelPublish(Long examId) {
-        return publishOperation(examId, 0);
-    }
-
-    /**
-     * 发布竞赛和撤销发布竞赛
-     * @param examId
-     * @param status
-     * @return
-     */
-    private int publishOperation(Long examId, Integer status){
         Exam exam = getExam(examId);
         checkExamTime(examId);
-
-        Long count = examQuestionMapper.selectCount(new LambdaQueryWrapper<ExamQuestion>()
-                .eq(ExamQuestion::getExamId, examId));
-        if(count == null || count<=0){
-            throw new ExamException(ResultCode.EXAM_NOT_HAS_QUESTION);
+        if (exam.getEndTime().isBefore(LocalDateTime.now())) {
+            throw new ExamException(ResultCode.EXAM_IS_FINISH);
         }
-
-        exam.setStatus(status);
-
-        // 操作redis中数据
-        if (status == 1) {
-            examCacheManager.addCache(exam);
-        } else {
-            examCacheManager.deleteCache(examId);
-        }
+        exam.setStatus(Constants.FALSE);
+        examCacheManager.deleteCache(examId);
         return examMapper.updateById(exam);
     }
 

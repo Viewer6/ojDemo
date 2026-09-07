@@ -44,6 +44,7 @@ public enum ResultCode {
     EXAM_IS_PUBLISH(3306, "竞赛已发布, 不能进行修改"),
 
     EXAM_NOT_HAS_QUESTION(3307, "竞赛没有题目"),
+    EXAM_IS_FINISH(3308, "竞赛已经截止"),
     ;
 
     private int code; // 状态码
