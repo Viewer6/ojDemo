@@ -16,4 +16,31 @@
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>oj-common-core</artifactId>
+            <version>${oj-common-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>oj-common-redis</artifactId>
+            <version>${oj-common-redis.version}</version>
+        </dependency>
+
+        <dependency>
+        <groupId>com.xuxueli</groupId>
+        <artifactId>xxl-job-core</artifactId>
+        <version>${xxl-job.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>oj-common-mybatis</artifactId>
+            <version>${oj-common-mybatis.version}</version>
+        </dependency>
+
+    </dependencies>
+
 </project>
