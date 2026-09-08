@@ -1,4 +1,4 @@
-package com.viewer.common.core.emuns;
+package com.viewer.common.core.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,14 +1,14 @@
-package com.viewer.common.core.emuns;
+package com.viewer.common.core.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum UserIdentity {
+public enum UserStatus {
 
-    ORDINARY(1, "普通用户"),
-    ADMIN(2, "管理员");
+    BLACKLIST(0, "拉黑"),
+    NORMAL(1, "正常");
 
     private Integer value;
     private String desc;

@@ -1,4 +1,4 @@
-package com.viewer.common.core.emuns;
+package com.viewer.common.core.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,11 +40,27 @@ public enum ResultCode {
 
     EXAM_NOT_EXISTS(3304, "竞赛不存在"),
 
-    EXAM_STARTED(3305, "竞赛已开始, 不能进行修改"),
+    EXAM_STARTED(3305, "竞赛已经发布不能进行编辑、删除操作"),
     EXAM_IS_PUBLISH(3306, "竞赛已发布, 不能进行修改"),
 
     EXAM_NOT_HAS_QUESTION(3307, "竞赛没有题目"),
-    EXAM_IS_FINISH(3308, "竞赛已经截止"),
+    EXAM_IS_FINISH(3308, "竞赛已经结束不能进行操作"),
+
+
+
+    USER_EXAM_HAS_ENTER                 (3801, "用户已经报过名，无需重复报名"),
+
+    FAILED_FILE_UPLOAD                  (3401, "文件上传失败"),
+
+    FAILED_FILE_UPLOAD_TIME_LIMIT       (3402, "当天上传图片数量超过上限"),
+
+    FAILED_FIRST_QUESTION               (3501, "当前题目已经是第一题了哦"),
+
+    FAILED_LAST_QUESTION                (3502, "当前题目已经是最后一题了哦"),
+
+    FAILED_NOT_SUPPORT_PROGRAM          (3601, "当前不支持此语言"),
+
+    FAILED_RABBIT_PRODUCE               (3701, "mq生产消息异常")
     ;
 
     private int code; // 状态码
