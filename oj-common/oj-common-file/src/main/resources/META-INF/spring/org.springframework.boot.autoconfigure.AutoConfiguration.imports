@@ -1,0 +1,3 @@
+com.viewer.common.file.config.OSSConfig
+com.viewer.common.file.service.OSSService
+com.viewer.common.file.config.OSSProperties
