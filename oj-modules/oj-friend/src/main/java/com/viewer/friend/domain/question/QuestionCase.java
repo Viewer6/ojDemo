@@ -1,4 +1,4 @@
-package com.bite.friend.domain.question;
+package com.viewer.friend.domain.question;
 
 import lombok.Getter;
 import lombok.Setter;

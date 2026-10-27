@@ -1,7 +1,7 @@
 package com.viewer.system.service.user.impl;
 
 import com.github.pagehelper.PageHelper;
-import com.viewer.common.core.emuns.ResultCode;
+import com.viewer.common.core.enums.ResultCode;
 import com.viewer.common.core.exception.UserException;
 import com.viewer.system.domain.user.User;
 import com.viewer.system.domain.user.dto.UserDTO;

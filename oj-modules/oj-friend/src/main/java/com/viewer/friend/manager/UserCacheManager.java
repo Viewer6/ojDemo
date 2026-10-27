@@ -1,17 +1,15 @@
-package com.bite.friend.manager;
+package com.viewer.friend.manager;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.bite.common.core.constants.CacheConstants;
-import com.bite.common.redis.service.RedisService;
-import com.bite.friend.domain.user.User;
-import com.bite.friend.domain.user.vo.UserVO;
-import com.bite.friend.mapper.user.UserMapper;
+import com.viewer.common.core.constants.CacheConstants;
+import com.viewer.common.redis.service.RedisService;
+import com.viewer.friend.domain.user.User;
+import com.viewer.friend.domain.user.vo.UserVO;
+import com.viewer.friend.mapper.user.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.TimeUnit;
 
 @Component

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bite.friend.mapper.user.UserExamMapper">
+<mapper namespace="com.viewer.friend.mapper.user.UserExamMapper">
 
-    <select id="selectUserExamList" resultType="com.bite.friend.domain.exam.vo.ExamVO">
+    <select id="selectUserExamList" resultType="com.viewer.friend.domain.exam.vo.ExamListVO">
         SELECT
             e.exam_id,
             e.title,
@@ -23,7 +23,7 @@
     </select>
 
 
-    <select id="selectExamRankList" resultType="com.bite.friend.domain.exam.vo.ExamRankVO">
+    <select id="selectExamRankList" resultType="com.viewer.friend.domain.exam.vo.ExamRankVO">
         SELECT
             user_id,
             score,

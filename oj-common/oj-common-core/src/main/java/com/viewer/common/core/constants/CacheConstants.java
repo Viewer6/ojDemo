@@ -36,4 +36,8 @@ public class CacheConstants {
 
     public static final String EXAM_RANK_LIST = "e:r:l:";
 
+    public static final long DEFAULT_START = 0;
+
+    public static final long DEFAULT_END = -1;
+
 }

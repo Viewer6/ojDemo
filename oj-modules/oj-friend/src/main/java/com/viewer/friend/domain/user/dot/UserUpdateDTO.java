@@ -1,4 +1,4 @@
-package com.bite.friend.domain.user.dto;
+package com.viewer.friend.domain.user.dot;
 
 import lombok.Getter;
 import lombok.Setter;

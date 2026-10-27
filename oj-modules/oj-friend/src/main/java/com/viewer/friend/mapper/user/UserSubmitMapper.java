@@ -1,7 +1,7 @@
-package com.bite.friend.mapper.user;
+package com.viewer.friend.mapper.user;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.bite.friend.domain.user.UserSubmit;
+import com.viewer.friend.domain.user.UserSubmit;
 
 import java.util.List;
 

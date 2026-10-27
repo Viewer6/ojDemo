@@ -1,4 +1,4 @@
-package com.bite.common.core.utils;
+package com.viewer.common.core.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;

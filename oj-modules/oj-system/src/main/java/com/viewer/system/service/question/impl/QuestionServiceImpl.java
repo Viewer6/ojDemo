@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.viewer.common.core.constants.Constants;
-import com.viewer.common.core.emuns.ResultCode;
+import com.viewer.common.core.enums.ResultCode;
 import com.viewer.common.core.exception.QuestionException;
 import com.viewer.system.domain.question.Question;
 import com.viewer.system.domain.question.dto.QuestionAddDTO;

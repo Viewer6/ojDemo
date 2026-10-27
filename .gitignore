@@ -15,3 +15,5 @@ logs/
 # 前端vue
 node_modules/
 dist/
+
+deploy/dev/elasticSearch/es-plugins

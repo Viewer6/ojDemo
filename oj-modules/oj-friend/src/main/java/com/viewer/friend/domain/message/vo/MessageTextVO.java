@@ -1,4 +1,4 @@
-package com.bite.friend.domain.message.vo;
+package com.viewer.friend.domain.message.vo;
 
 import lombok.Getter;
 import lombok.Setter;

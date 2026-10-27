@@ -1,13 +1,13 @@
-package com.bite.friend.manager;
+package com.viewer.friend.manager;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.bite.common.core.constants.CacheConstants;
-import com.bite.common.core.enums.ResultCode;
-import com.bite.common.redis.service.RedisService;
-import com.bite.common.security.exception.ServiceException;
-import com.bite.friend.domain.question.Question;
-import com.bite.friend.mapper.question.QuestionMapper;
+import com.viewer.common.core.constants.CacheConstants;
+import com.viewer.common.core.enums.ResultCode;
+import com.viewer.common.core.exception.ServiceException;
+import com.viewer.common.redis.service.RedisService;
+import com.viewer.friend.domain.question.Question;
+import com.viewer.friend.mapper.question.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -8,17 +8,22 @@ import com.viewer.common.core.constants.Constants;
 import com.viewer.common.core.constants.HttpConstants;
 import com.viewer.common.core.domain.LoginUser;
 import com.viewer.common.core.domain.Result;
-import com.viewer.common.core.emuns.ResultCode;
-import com.viewer.common.core.emuns.UserIdentity;
-import com.viewer.common.core.emuns.UserStatus;
+import com.viewer.common.core.enums.ResultCode;
+import com.viewer.common.core.enums.UserIdentity;
+import com.viewer.common.core.enums.UserStatus;
+import com.viewer.common.core.exception.ServiceException;
 import com.viewer.common.core.exception.UserException;
+import com.viewer.common.core.utils.ThreadLocalUtil;
 import com.viewer.common.message.service.AliSmsService;
 import com.viewer.common.redis.service.RedisService;
 import com.viewer.common.security.service.TokenService;
 import com.viewer.friend.Service.user.IUserService;
 import com.viewer.friend.domain.user.User;
 import com.viewer.friend.domain.user.dot.UserDTO;
+import com.viewer.friend.domain.user.dot.UserUpdateDTO;
 import com.viewer.friend.domain.user.vo.UserInfoVO;
+import com.viewer.friend.domain.user.vo.UserVO;
+import com.viewer.friend.manager.UserCacheManager;
 import com.viewer.friend.mapper.user.UserMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +53,9 @@ public class UserServiceImpl implements IUserService {
     @Autowired
     private AliSmsService aliSmsService;
 
+    @Autowired
+    private UserCacheManager userCacheManager;
+
     @Value("${sms.code-expiration}")
     private Long phoneCodeExpiration; // 验证码时效
 
@@ -59,6 +67,9 @@ public class UserServiceImpl implements IUserService {
 
     @Value("${sms.is-send}")
     private boolean isSend;  //开关打开：true  开关关闭false
+
+    @Value("${file.oss.downloadUrl}")
+    private String downloadUrl;
 
     @Override
     public boolean sendCode(UserDTO userDTO) {
@@ -119,7 +130,7 @@ public class UserServiceImpl implements IUserService {
             userMapper.insert(user);
         }
 
-        String token = tokenService.getToken(user.getUserId(), secret, UserIdentity.ORDINARY.getValue(), user.getNickName(), user.getHeadImage());
+        String token = tokenService.getToken(user.getUserId(), secret, UserIdentity.ORDINARY.getValue(), user.getNickName(), downloadUrl+user.getHeadImage());
         return Result.success(token);
     }
 
@@ -141,6 +152,65 @@ public class UserServiceImpl implements IUserService {
             return Result.fail(null);
         }
         return Result.success(new UserInfoVO(loginUser.getNickName(), loginUser.getHeadImage()));
+    }
+
+    @Override
+    public UserVO detail() {
+        Long userId = ThreadLocalUtil.get(Constants.USER_ID, Long.class);
+        if (userId == null) {
+            throw new UserException(ResultCode.FAILED_USER_NOT_EXISTS);
+        }
+        UserVO userVO = userCacheManager.getUserById(userId);
+        if (userVO == null) {
+            throw new UserException(ResultCode.FAILED_USER_NOT_EXISTS);
+        }
+        if (StrUtil.isNotEmpty(userVO.getHeadImage())) {
+            userVO.setHeadImage(downloadUrl + userVO.getHeadImage());
+        }
+        return userVO;
+    }
+
+    @Override
+    public int edit(UserUpdateDTO userUpdateDTO) {
+        Long userId = ThreadLocalUtil.get(Constants.USER_ID, Long.class);
+        if (userId == null) {
+            throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+        }
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+        }
+        user.setNickName(userUpdateDTO.getNickName());
+        user.setSex(userUpdateDTO.getSex());
+        user.setSchoolName(userUpdateDTO.getSchoolName());
+        user.setMajorName(userUpdateDTO.getMajorName());
+        user.setPhone(userUpdateDTO.getPhone());
+        user.setEmail(userUpdateDTO.getEmail());
+        user.setWechat(userUpdateDTO.getWechat());
+        user.setIntroduce(userUpdateDTO.getIntroduce());
+        //更新用户缓存
+        userCacheManager.refreshUser(user);
+        tokenService.refreshLoginUser(user.getNickName(),user.getHeadImage(),
+                ThreadLocalUtil.get(Constants.USER_KEY, String.class));
+        return userMapper.updateById(user);
+    }
+
+    @Override
+    public int updateHeadImage(String headImage) {
+        Long userId = ThreadLocalUtil.get(Constants.USER_ID, Long.class);
+        if (userId == null) {
+            throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+        }
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+        }
+        user.setHeadImage(headImage);
+        //更新用户缓存
+        userCacheManager.refreshUser(user);
+        tokenService.refreshLoginUser(user.getNickName(),downloadUrl+user.getHeadImage(),
+                ThreadLocalUtil.get(Constants.USER_KEY, String.class));
+        return userMapper.updateById(user);
     }
 
     private String getCodeTimesKey(String phone) {

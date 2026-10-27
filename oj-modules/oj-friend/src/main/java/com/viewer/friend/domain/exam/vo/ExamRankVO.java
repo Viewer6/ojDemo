@@ -1,4 +1,4 @@
-package com.bite.friend.domain.exam.vo;
+package com.viewer.friend.domain.exam.vo;
 
 import lombok.Getter;
 import lombok.Setter;

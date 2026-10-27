@@ -1,12 +1,16 @@
 package com.viewer.common.security.interceptor;
 
 import cn.hutool.core.util.StrUtil;
+import com.viewer.common.core.constants.Constants;
 import com.viewer.common.core.constants.HttpConstants;
+import com.viewer.common.core.utils.ThreadLocalUtil;
 import com.viewer.common.security.service.TokenService;
+import io.jsonwebtoken.Claims;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -24,8 +28,19 @@ public class TokenInterceptor implements HandlerInterceptor {
             // 无token，直接放行；
             return true;
         }
-        tokenService.extendToken(token, secret);
+        Claims claims = tokenService.getClaims(token, secret);
+        Long userId = tokenService.getUserId(claims);
+        String userKey = tokenService.getUserKey(claims);
+        ThreadLocalUtil.set(Constants.USER_ID, userId);
+        ThreadLocalUtil.set(Constants.USER_KEY, userKey);
+
+        tokenService.extendToken(claims);
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable Exception ex) throws Exception {
+        ThreadLocalUtil.remove();
     }
 
     /**

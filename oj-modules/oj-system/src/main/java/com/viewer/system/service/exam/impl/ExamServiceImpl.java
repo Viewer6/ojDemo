@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.PageHelper;
 import com.viewer.common.core.constants.Constants;
-import com.viewer.common.core.emuns.ResultCode;
+import com.viewer.common.core.enums.ResultCode;
 import com.viewer.common.core.exception.ExamException;
 import com.viewer.common.core.exception.QuestionException;
 import com.viewer.system.domain.exam.Exam;

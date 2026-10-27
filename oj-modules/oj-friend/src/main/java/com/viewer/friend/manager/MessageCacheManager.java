@@ -1,15 +1,12 @@
-package com.bite.friend.manager;
+package com.viewer.friend.manager;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import com.bite.common.core.constants.CacheConstants;
-import com.bite.common.core.domain.PageQueryDTO;
-import com.bite.common.core.enums.ExamListType;
-import com.bite.common.redis.service.RedisService;
-import com.bite.friend.domain.exam.dto.ExamQueryDTO;
-import com.bite.friend.domain.exam.vo.ExamVO;
-import com.bite.friend.domain.message.vo.MessageTextVO;
-import com.bite.friend.mapper.message.MessageTextMapper;
+import com.viewer.common.core.constants.CacheConstants;
+import com.viewer.common.core.domain.PageQueryDTO;
+import com.viewer.common.redis.service.RedisService;
+import com.viewer.friend.domain.message.vo.MessageTextVO;
+import com.viewer.friend.mapper.message.MessageTextMapper;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

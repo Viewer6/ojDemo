@@ -1,6 +1,6 @@
-package com.bite.friend.domain.question.dto;
+package com.viewer.friend.domain.question.dto;
 
-import com.bite.common.core.domain.PageQueryDTO;
+import com.viewer.common.core.domain.PageQueryDTO;
 import lombok.Getter;
 import lombok.Setter;
 

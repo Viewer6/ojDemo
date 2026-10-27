@@ -1,4 +1,4 @@
-package com.bite.friend.domain.question.vo;
+package com.viewer.friend.domain.question.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;

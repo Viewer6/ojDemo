@@ -1,6 +1,6 @@
-package com.bite.friend.elasticsearch;
+package com.viewer.friend.elasticsearch;
 
-import com.bite.friend.domain.question.es.QuestionES;
+import com.viewer.friend.domain.question.es.QuestionES;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.annotations.Query;

@@ -1,6 +1,6 @@
 package com.viewer.common.core.exception;
 
-import com.viewer.common.core.emuns.ResultCode;
+import com.viewer.common.core.enums.ResultCode;
 import lombok.Data;
 
 @Data

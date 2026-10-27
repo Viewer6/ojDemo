@@ -1,11 +1,11 @@
-package com.bite.friend.aspect;
+package com.viewer.friend.aspect;
 
-import com.bite.common.core.constants.Constants;
-import com.bite.common.core.enums.ResultCode;
-import com.bite.common.core.utils.ThreadLocalUtil;
-import com.bite.common.security.exception.ServiceException;
-import com.bite.friend.domain.user.vo.UserVO;
-import com.bite.friend.manager.UserCacheManager;
+import com.viewer.common.core.constants.Constants;
+import com.viewer.common.core.enums.ResultCode;
+import com.viewer.common.core.exception.ExamException;
+import com.viewer.common.core.utils.ThreadLocalUtil;
+import com.viewer.friend.domain.user.vo.UserVO;
+import com.viewer.friend.manager.UserCacheManager;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -21,15 +21,15 @@ public class UserStatusCheckAspect {
     @Autowired
     private UserCacheManager userCacheManager;
 
-    @Before(value = "@annotation(com.bite.friend.aspect.CheckUserStatus)")
+    @Before(value = "@annotation(com.viewer.friend.aspect.CheckUserStatus)")
     public void before(JoinPoint point){
         Long userId = ThreadLocalUtil.get(Constants.USER_ID, Long.class);
         UserVO user = userCacheManager.getUserById(userId);
         if (user == null) {
-            throw new ServiceException(ResultCode.FAILED_USER_NOT_EXISTS);
+            throw new ExamException(ResultCode.FAILED_USER_NOT_EXISTS);
         }
         if (Objects.equals(user.getStatus(), Constants.FALSE)) {
-            throw new ServiceException(ResultCode.FAILED_USER_BANNED);
+            throw new ExamException(ResultCode.FAILED_USER_BANNED);
         }
     }
 }

@@ -1,9 +1,9 @@
-package com.bite.friend.domain.question;
+package com.viewer.friend.domain.question;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.bite.common.core.domain.BaseEntity;
+import com.viewer.common.core.domain.BaseEntity;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bite.friend.mapper.user.UserSubmitMapper">
-    <select id="selectCurrentUserSubmit" resultType="com.bite.friend.domain.user.UserSubmit">
+<mapper namespace="com.viewer.friend.mapper.user.UserSubmitMapper">
+    <select id="selectCurrentUserSubmit" resultType="com.viewer.friend.domain.user.UserSubmit">
         SELECT
             submit_id,
             pass,

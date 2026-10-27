@@ -147,3 +147,65 @@ create table tb_user(
     update_time  datetime comment '更新时间',
     primary key(`user_id`)
     )
+
+
+    use oj_dev;
+
+create table tb_user_exam(
+                             user_exam_id bigint unsigned NOT NULL COMMENT '用户竞赛关系id',
+                             user_id bigint unsigned NOT NULL COMMENT '用户id',
+                             exam_id bigint unsigned NOT NULL COMMENT '竞赛id',
+                             score int unsigned COMMENT '得分',
+                             exam_rank  int unsigned COMMENT '排名',
+                             create_by    bigint unsigned not null  comment '创建人',
+                             create_time  datetime not null comment '创建时间',
+                             update_by    bigint unsigned  comment '更新人',
+                             update_time  datetime comment '更新时间',
+                             primary key(user_exam_id)
+);
+
+
+create table tb_user_submit(
+                               submit_id bigint unsigned NOT NULL COMMENT '提交记录id',
+                               user_id   bigint unsigned NOT NULL COMMENT '用户id',
+                               question_id  bigint unsigned NOT NULL COMMENT '题目id',
+                               exam_id bigint unsigned  COMMENT '竞赛id',
+                               program_type tinyint NOT NULL COMMENT '代码类型 0 java   1 CPP',
+                               user_code   text NOT NULL COMMENT '用户代码',
+                               pass tinyint NOT NULL COMMENT '0：未通过  1：通过',
+                               exe_message  varchar(500) NOT NULL COMMENT '执行结果',
+                               score int NOT NULL DEFAULT '0' COMMENT '得分',
+                               create_by    bigint unsigned not null  comment '创建人',
+                               create_time  datetime not null comment '创建时间',
+                               update_by    bigint unsigned  comment '更新人',
+                               update_time  datetime comment '更新时间',
+                               primary key(`submit_id`)
+);
+
+create table tb_message_text(
+                                text_id  bigint unsigned NOT NULL COMMENT '消息内容id（主键）',
+                                message_title varchar(10)  NOT NULL COMMENT '消息标题',
+                                message_content varchar(200)  NOT NULL COMMENT '消息内容',
+                                create_by    bigint unsigned not null  comment '创建人',
+                                create_time  datetime not null comment '创建时间',
+                                update_by    bigint unsigned  comment '更新人',
+                                update_time  datetime comment '更新时间',
+                                primary key (text_id)
+);
+
+
+create table tb_message(
+                           message_id  bigint unsigned NOT NULL COMMENT '消息id（主键）',
+                           text_id  bigint unsigned NOT NULL COMMENT '消息内容id（主键）',
+                           send_id  bigint unsigned NOT NULL COMMENT '消息发送人id',
+                           rec_id  bigint unsigned NOT NULL COMMENT '消息接收人id',
+                           create_by    bigint unsigned not null  comment '创建人',
+                           create_time  datetime not null comment '创建时间',
+                           update_by    bigint unsigned  comment '更新人',
+                           update_time  datetime comment '更新时间',
+                           primary key (message_id)
+);
+
+
+
+

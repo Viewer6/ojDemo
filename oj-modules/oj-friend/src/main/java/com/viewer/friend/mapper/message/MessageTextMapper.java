@@ -1,8 +1,8 @@
-package com.bite.friend.mapper.message;
+package com.viewer.friend.mapper.message;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.bite.friend.domain.message.MessageText;
-import com.bite.friend.domain.message.vo.MessageTextVO;
+import com.viewer.friend.domain.message.MessageText;
+import com.viewer.friend.domain.message.vo.MessageTextVO;
 
 import java.util.List;
 

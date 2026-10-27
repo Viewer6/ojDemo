@@ -1,7 +1,7 @@
 package com.viewer.common.security.handler;
 
 import com.viewer.common.core.domain.Result;
-import com.viewer.common.core.emuns.ResultCode;
+import com.viewer.common.core.enums.ResultCode;
 import com.viewer.common.core.exception.ExamException;
 import com.viewer.common.core.exception.QuestionException;
 import com.viewer.common.core.exception.UserException;
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler
     @ExceptionHandler(ExamException.class)
     public Result<?> handleExamException(ExamException e, HttpServletRequest request){
         String requestURI = request.getRequestURI();
-        log.error("请求地址'{}', {}", requestURI, e.getMsg());
+        log.error("请求地址'{}', {}", requestURI, e.getMsg(), e);
         return Result.fail(e.getCode(), e.getMsg());
     }
 

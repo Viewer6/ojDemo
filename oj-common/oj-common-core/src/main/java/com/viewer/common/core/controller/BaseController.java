@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.github.pagehelper.PageInfo;
 import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.domain.TableDataInfo;
-import com.viewer.common.core.emuns.ResultCode;
+import com.viewer.common.core.enums.ResultCode;
 
 import java.util.List;
 

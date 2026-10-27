@@ -12,6 +12,13 @@ public class Constants {
 
     public static final String DEFAULT_HEAD_IMAGE = "E:\\Programing\\ojDemo-vue-c\\src\\assets\\images\\headimage.jpg";
 
+    public static final String USER_ID = "user_id";
+
+    public static final String USER_KEY = "user_key";
+
+    public static final String JUDGE_SERVICE = "oj-judge";
+
+    public static final String UNDERLINE_SEPARATOR = "_";
 
     /**
      * UTF-8 字符集

@@ -5,7 +5,9 @@ import com.viewer.common.core.controller.BaseController;
 import com.viewer.common.core.domain.Result;
 import com.viewer.friend.Service.user.IUserService;
 import com.viewer.friend.domain.user.dot.UserDTO;
+import com.viewer.friend.domain.user.dot.UserUpdateDTO;
 import com.viewer.friend.domain.user.vo.UserInfoVO;
+import com.viewer.friend.domain.user.vo.UserVO;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class UserController extends BaseController {
         return getResult(userService.sendCode(userDTO));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/code/login")
     public Result<String> login(@RequestBody UserDTO userDTO){
         return userService.login(userDTO);
     }
@@ -33,8 +35,24 @@ public class UserController extends BaseController {
         return getResult(userService.logout(token));
     }
 
-    @GetMapping("/getUserInfo")
-    public Result<UserInfoVO> getUserInfo(@RequestHeader(HttpConstants.AUTHENTICATION) String token){
+    @GetMapping("/info")
+    public Result<UserInfoVO> info(@RequestHeader(HttpConstants.AUTHENTICATION) String token){
         return userService.getUserInfo(token);
     }
+
+    @GetMapping("/detail")
+    public Result<UserVO> detail(){
+        return Result.success(userService.detail());
+    }
+
+
+    @PutMapping("/edit")
+    public Result<Void> edit(@RequestBody UserUpdateDTO userUpdateDTO) {
+        return getResult(userService.edit(userUpdateDTO));
+    }
+    @PutMapping("/head-image/update")
+    public Result<Void> updateHeadImage(@RequestBody UserUpdateDTO userUpdateDTO) {
+        return getResult(userService.updateHeadImage(userUpdateDTO.getHeadImage()));
+    }
+
 }
