@@ -50,7 +50,7 @@ public class DockerSandBoxPoolConfig {
                 .build();
     }
 
-    @Bean
+    @Bean(destroyMethod = "destroy")
     public DockerSandBoxPool createDockerSandBoxPool(DockerClient dockerClient) {
         DockerSandBoxPool dockerSandBoxPool = new DockerSandBoxPool(dockerClient, sandboxImage, volumeDir, memoryLimit,
                 memorySwapLimit, cpuLimit, poolSize, containerNamePrefix);
