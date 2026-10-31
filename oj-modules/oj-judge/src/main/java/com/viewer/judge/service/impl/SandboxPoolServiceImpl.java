@@ -2,7 +2,6 @@ package com.viewer.judge.service.impl;
 
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.ExecCreateCmdResponse;
@@ -21,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -119,7 +120,7 @@ public class SandboxPoolServiceImpl implements ISandboxPoolService {
         CompileResult compileResult = new CompileResult();
         DockerStartResultCallback resultCallback = new DockerStartResultCallback();
         try {
-            String cmdId = createExecCmd(JudgeConstants.DOCKER_JAVAC_CMD, null, containerId);
+            String cmdId = createExecCmd(JudgeConstants.DOCKER_JAVAC_CMD, containerId);
             boolean finished = dockerClient.execStartCmd(cmdId)
                     .exec(resultCallback)
                     // 编译也要有超时，避免 javac 卡死时长期占用容器
@@ -148,7 +149,7 @@ public class SandboxPoolServiceImpl implements ISandboxPoolService {
         long maxUseTime = 0L; //最大运行时间
         //执行用户代码
         for (String inputArgs : inputList) {
-            String cmdId = createExecCmd(JudgeConstants.DOCKER_JAVA_EXEC_CMD, inputArgs, containerId);
+            String cmdId = createExecCmd(JudgeConstants.DOCKER_JAVA_EXEC_CMD, containerId);
             //执行情况监控
             StatsCmd statsCmd = dockerClient.statsCmd(containerId); //启动监控
             StatisticsCallback statisticsCallback = statsCmd.exec(new StatisticsCallback());
@@ -157,8 +158,11 @@ public class SandboxPoolServiceImpl implements ISandboxPoolService {
             boolean finished;
             stopWatch.start();
             try {
+                // 用例输入必须写到进程的标准输入：题目的 Main 用 Scanner(System.in) 读取，
+                // 以命令行参数形式传进去它读不到。
                 // 超时后只是不再等待，容器里的 java 进程仍会继续运行，下面要主动杀掉
                 finished = dockerClient.execStartCmd(cmdId)
+                        .withStdIn(new ByteArrayInputStream(inputArgs.getBytes(StandardCharsets.UTF_8)))
                         .exec(resultCallback)
                         .awaitCompletion(timeLimit, TimeUnit.SECONDS);
             } catch (InterruptedException e) {
@@ -196,12 +200,7 @@ public class SandboxPoolServiceImpl implements ISandboxPoolService {
         return SandBoxExecuteResult.success(CodeRunStatus.SUCCEED, outList, maxMemory, maxUseTime);
     }
 
-    private String createExecCmd(String[] javaCmdArr, String inputArgs, String containerId) {
-        if (!StrUtil.isEmpty(inputArgs)) {
-            //当入参不为空时拼接入参
-            String[] inputArray = inputArgs.split(" "); //入参
-            javaCmdArr = ArrayUtil.append(JudgeConstants.DOCKER_JAVA_EXEC_CMD, inputArray);
-        }
+    private String createExecCmd(String[] javaCmdArr, String containerId) {
         ExecCreateCmdResponse cmdResponse = dockerClient.execCreateCmd(containerId)
                 .withCmd(javaCmdArr)
                 .withAttachStderr(true)

@@ -30,11 +30,18 @@ import org.example.api.domain.vo.UserQuestionResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @Slf4j
 public class UserQuestionServiceImpl implements IUserQuestionService {
+
+    /** 匹配 import 语句；题目的 main 模板可能被压缩成一行，不能按行匹配 */
+    private static final Pattern JAVA_IMPORT_PATTERN =
+            Pattern.compile("import\\s+(?:static\\s+)?[^;]+;");
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -180,6 +187,23 @@ public class UserQuestionServiceImpl implements IUserQuestionService {
         return questionCaseList;
     }
 
+    /**
+     * 把用户代码和题目的 main 函数模板拼装成一个可以编译的 Java 源文件。
+     *
+     * <p>main_fuc 配置的是完整的类（如 {@code public class Main{...}}），不是类体片段。
+     * 以前用「插到用户代码最后一个右花括号之前」的方式拼接，会把模板的 import 和 class
+     * 都塞进 Solution 类体内部，javac 直接报 illegal start of type。</p>
+     *
+     * <p>现在的拼装规则：</p>
+     * <ol>
+     *     <li>把模板里的 import 提到文件最前面，因为 import 必须位于所有类型声明之前；</li>
+     *     <li>用户代码原样保留，作为第一个顶层类；</li>
+     *     <li>模板类放到用户类之后，作为第二个顶层类；</li>
+     *     <li>文件名固定是 Solution.java，一个文件只能有一个 public 类，
+     *         所以去掉模板类的 public，Main 仍然作为程序入口类
+     *         （见 {@code JudgeConstants.DOCKER_JAVA_EXEC_CMD}）。</li>
+     * </ol>
+     */
     private String codeConnect(String userCode, String mainFunc) {
         if (StrUtil.isBlank(userCode)) {
             throw new ServiceException(ResultCode.FAILED_PARAMS_VALIDATE, "用户代码不能为空");
@@ -187,11 +211,36 @@ public class UserQuestionServiceImpl implements IUserQuestionService {
         if (StrUtil.isBlank(mainFunc)) {
             throw new ServiceException(ResultCode.ERROR, "题目未配置 main 函数模板");
         }
-        String targetCharacter = "}";
-        int targetLastIndex = userCode.lastIndexOf(targetCharacter);
-        if (targetLastIndex != -1) {
-            return userCode.substring(0, targetLastIndex) + "\n" + mainFunc + "\n" + userCode.substring(targetLastIndex);
+
+        // 1. 提取模板里的 import，并从模板中移除
+        List<String> imports = new ArrayList<>();
+        Matcher matcher = JAVA_IMPORT_PATTERN.matcher(mainFunc);
+        StringBuffer mainBody = new StringBuffer();
+        while (matcher.find()) {
+            String importStatement = matcher.group().trim();
+            if (!imports.contains(importStatement)) {
+                imports.add(importStatement);
+            }
+            matcher.appendReplacement(mainBody, "");
         }
-        throw new ServiceException(ResultCode.FAILED_PARAMS_VALIDATE, "用户代码缺少右花括号 }，请检查提交内容");
+        matcher.appendTail(mainBody);
+
+        // 2. Solution.java 里不能出现第二个 public 类，去掉 Main 的 public
+        String mainClassCode = mainBody.toString()
+                .replaceFirst("\\bpublic\\s+(?=(?:final\\s+)?class\\s+Main\\b)", "");
+
+        // 3. import 放最前面，然后依次是用户代码、模板类
+        StringBuilder code = new StringBuilder();
+        for (String importStatement : imports) {
+            if (!userCode.contains(importStatement)) {
+                code.append(importStatement).append('\n');
+            }
+        }
+        code.append(userCode);
+        if (!userCode.endsWith("\n")) {
+            code.append('\n');
+        }
+        code.append('\n').append(mainClassCode);
+        return code.toString();
     }
 }

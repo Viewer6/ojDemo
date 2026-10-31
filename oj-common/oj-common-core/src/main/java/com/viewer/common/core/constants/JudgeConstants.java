@@ -22,18 +22,18 @@ public class JudgeConstants {
 
     public static final String USER_CODE_JAVA_CLASS_NAME = "Solution.java";
 
-    public static final String USER_CODE_JAVA_FILE_NAME = "Solution";
-
     public static final String JAVA_ENV_IMAGE = "openjdk:8-jdk-alpine";
 
     public static final String JAVA_CONTAINER_PREFIX = "/";
 
     public static final String JAVA_CONTAINER_NAME = "oj-jdk";
 
-    public static final String[] DOCKER_JAVAC_CMD = new String[] {"javac", "/usr/share/java/Solution.java"};
+    // 源码由后端以 UTF-8 写入，javac 也要显式按 UTF-8 读取，否则中文注释/字符串会报 unmappable character
+    public static final String[] DOCKER_JAVAC_CMD = new String[]{"javac", "-encoding", "UTF-8", "/usr/share/java/Solution.java"};
 
-    public static final String[] DOCKER_JAVA_EXEC_CMD = new String[]{"java", "-cp", DOCKER_USER_CODE_DIR, USER_CODE_JAVA_FILE_NAME};
-    //  java -cp  /usr/share/java  Solution 1 2
+    // main 方法在题目的 main 函数模板（Main 类）里，用户代码只提供 Solution 类，因此入口类是 Main
+    public static final String[] DOCKER_JAVA_EXEC_CMD = new String[]{"java", "-Dfile.encoding=UTF-8", "-cp", DOCKER_USER_CODE_DIR, "Main"};
+    //  java -Dfile.encoding=UTF-8 -cp /usr/share/java Main
 
 }
 
