@@ -48,11 +48,13 @@
         <oj-common-elsticsearch.version>1.0-SNAPSHOT</oj-common-elsticsearch.version>
         <oj-common-file.version>1.0-SNAPSHOT</oj-common-file.version>
         <oj-api.version>1.0-SNAPSHOT</oj-api.version>
+        <oj-common-rabbitmq.version>1.0-SNAPSHOT</oj-common-rabbitmq.version>
 
         <javax-xml-bind.version>2.3.1</javax-xml-bind.version>
         <javax-activation.version>1.1.1</javax-activation.version>
         <org-glassfish-jaxb.version>2.3.3</org-glassfish-jaxb.version>
         <aliyun-oss.version>3.18.4</aliyun-oss.version>
+        <docker-java.version>3.3.4</docker-java.version>
     </properties>
 
     <dependencies>

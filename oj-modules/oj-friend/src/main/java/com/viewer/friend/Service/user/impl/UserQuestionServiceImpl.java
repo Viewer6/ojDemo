@@ -53,6 +53,7 @@ public class UserQuestionServiceImpl implements IUserQuestionService {
 
     @Override
     public Result<UserQuestionResultVO> submit(UserSubmitDTO submitDTO) {
+        //todo: 添加其他类型判题
         Integer programType = submitDTO.getProgramType();
         if (ProgramType.JAVA.getValue().equals(programType)) {
             //按照java逻辑处理

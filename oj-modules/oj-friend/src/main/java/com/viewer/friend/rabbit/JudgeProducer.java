@@ -1,10 +1,12 @@
 package com.viewer.friend.rabbit;
 
 
+import com.viewer.common.core.constants.RabbitMQConstants;
 import com.viewer.common.core.enums.ResultCode;
 import com.viewer.common.core.exception.ServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.example.api.domain.dto.JudgeSubmitDTO;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,15 @@
-server:
-  port: 9204
-# Spring
 spring:
   application:
-# 应用名称
+    # 应用名称（Feign 通过该名称找到判题服务）
     name: oj-judge
+  profiles:
+    active: local
+  cloud:
+    nacos:
+      discovery:
+        namespace: 79682ecd-0390-4415-bf6c-f644b8fdb78e
+        server-addr: http://localhost:8848
+      config:
+        namespace: 79682ecd-0390-4415-bf6c-f644b8fdb78e
+        server-addr: http://localhost:8848
+        file-extension: yaml

@@ -12,6 +12,9 @@ target/
 logs/
 *.log
 
+# 判题沙箱用户代码目录
+user-code-pool/
+
 # 前端vue
 node_modules/
 dist/
