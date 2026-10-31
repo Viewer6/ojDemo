@@ -4,6 +4,7 @@ import com.viewer.common.core.domain.Result;
 import com.viewer.common.core.enums.ResultCode;
 import com.viewer.common.core.exception.ExamException;
 import com.viewer.common.core.exception.QuestionException;
+import com.viewer.common.core.exception.ServiceException;
 import com.viewer.common.core.exception.UserException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -57,6 +58,18 @@ public class GlobalExceptionHandler
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}', {}", requestURI, e.getMsg());
         return Result.fail(e.getCode(), e.getMsg());
+    }
+
+    /**
+     * 业务异常（ServiceException 的子类会优先匹配到各自的处理器）
+     */
+    @ExceptionHandler(ServiceException.class)
+    public Result<?> handleServiceException(ServiceException e, HttpServletRequest request){
+        String requestURI = request.getRequestURI();
+        String msg = e.getMsg() != null ? e.getMsg() : e.getMessage();
+        Integer code = e.getCode() != null ? e.getCode() : ResultCode.ERROR.getCode();
+        log.error("请求地址'{}', 业务异常: {}", requestURI, msg);
+        return Result.fail(code, msg);
     }
 
     /**

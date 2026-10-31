@@ -92,24 +92,51 @@ public class UserQuestionServiceImpl implements IUserQuestionService {
         return resultVO;
     }
 
+    /**
+     * 组装判题参数。
+     * <p>
+     * 题目用例 questionCase 必须保存为 [{"input":"...","output":"..."}] 形式的 JSON 数组，
+     * 否则这里无法得到每个用例的输入/输出。ES 中的题目文档只在首次提交时从 MySQL 同步，
+     * 因此题库在 B 端被修改后 ES 里可能仍是旧数据，解析失败时需要回源 MySQL 重新加载。
+     */
     private JudgeSubmitDTO assembleJudgeSubmitDTO(UserSubmitDTO submitDTO) {
         Long questionId = submitDTO.getQuestionId();
+        if (questionId == null) {
+            throw new ServiceException(ResultCode.FAILED_PARAMS_VALIDATE, "题目id不能为空");
+        }
+
         QuestionES questionES = questionRepository.findById(questionId).orElse(null);
-        JudgeSubmitDTO judgeSubmitDTO = new JudgeSubmitDTO();
-        if (questionES != null) {
-            BeanUtil.copyProperties(questionES, judgeSubmitDTO);
-        } else {
-            Question question = questionMapper.selectById(questionId);
-            BeanUtil.copyProperties(question, judgeSubmitDTO);
-            questionES = new QuestionES();
-            BeanUtil.copyProperties(question, questionES);
+        boolean refreshEs = questionES == null;
+        if (refreshEs) {
+            //ES中没有该题目，回源MySQL
+            questionES = loadQuestionFromDb(questionId);
+        }
+
+        List<QuestionCase> questionCaseList = parseQuestionCase(questionES.getQuestionCase());
+        if (questionCaseList == null && !refreshEs) {
+            //ES中是旧数据（B端已修改但未同步ES），以MySQL为准重新加载
+            log.warn("题目[{}]在ES中的用例数据不是合法的JSON数组，回源MySQL重新加载", questionId);
+            questionES = loadQuestionFromDb(questionId);
+            questionCaseList = parseQuestionCase(questionES.getQuestionCase());
+            refreshEs = true;
+        }
+        if (questionCaseList == null) {
+            log.error("题目[{}]用例配置错误, questionCase={}", questionId, questionES.getQuestionCase());
+            throw new ServiceException(ResultCode.FAILED_QUESTION_CASE_INVALID,
+                    "题目用例配置有误（questionId=" + questionId
+                            + "），题目用例必须是形如 [{\"input\":\"1 2\",\"output\":\"3\"}] 的JSON数组");
+        }
+        if (refreshEs) {
+            //用例校验通过后再刷新ES，避免把非法数据写进索引
             questionRepository.save(questionES);
         }
+
+        JudgeSubmitDTO judgeSubmitDTO = new JudgeSubmitDTO();
+        BeanUtil.copyProperties(questionES, judgeSubmitDTO);
         judgeSubmitDTO.setUserId(ThreadLocalUtil.get(Constants.USER_ID, Long.class));
         judgeSubmitDTO.setExamId(submitDTO.getExamId());
         judgeSubmitDTO.setProgramType(submitDTO.getProgramType());
         judgeSubmitDTO.setUserCode(codeConnect(submitDTO.getUserCode(), questionES.getMainFuc()));
-        List<QuestionCase> questionCaseList = JSONUtil.toList(questionES.getQuestionCase(), QuestionCase.class);
         List<String> inputList = questionCaseList.stream().map(QuestionCase::getInput).toList();
         judgeSubmitDTO.setInputList(inputList);
         List<String> outputList = questionCaseList.stream().map(QuestionCase::getOutput).toList();
@@ -117,12 +144,54 @@ public class UserQuestionServiceImpl implements IUserQuestionService {
         return judgeSubmitDTO;
     }
 
+    private QuestionES loadQuestionFromDb(Long questionId) {
+        Question question = questionMapper.selectById(questionId);
+        if (question == null) {
+            throw new ServiceException(ResultCode.FAILED_QUESTION_NOT_EXISTS);
+        }
+        QuestionES questionES = new QuestionES();
+        BeanUtil.copyProperties(question, questionES);
+        return questionES;
+    }
+
+    /**
+     * 解析题目用例，格式不合法（或没有用例）时返回null。
+     */
+    private List<QuestionCase> parseQuestionCase(String questionCase) {
+        if (StrUtil.isBlank(questionCase)) {
+            return null;
+        }
+        List<QuestionCase> questionCaseList;
+        try {
+            questionCaseList = JSONUtil.toList(questionCase, QuestionCase.class);
+        } catch (Exception e) {
+            log.warn("题目用例解析失败: {}", questionCase, e);
+            return null;
+        }
+        if (questionCaseList == null || questionCaseList.isEmpty()) {
+            return null;
+        }
+        boolean incomplete = questionCaseList.stream()
+                .anyMatch(item -> item == null || item.getInput() == null || item.getOutput() == null);
+        if (incomplete) {
+            log.warn("题目用例缺少input/output字段: {}", questionCase);
+            return null;
+        }
+        return questionCaseList;
+    }
+
     private String codeConnect(String userCode, String mainFunc) {
+        if (StrUtil.isBlank(userCode)) {
+            throw new ServiceException(ResultCode.FAILED_PARAMS_VALIDATE, "用户代码不能为空");
+        }
+        if (StrUtil.isBlank(mainFunc)) {
+            throw new ServiceException(ResultCode.ERROR, "题目未配置 main 函数模板");
+        }
         String targetCharacter = "}";
         int targetLastIndex = userCode.lastIndexOf(targetCharacter);
         if (targetLastIndex != -1) {
             return userCode.substring(0, targetLastIndex) + "\n" + mainFunc + "\n" + userCode.substring(targetLastIndex);
         }
-        throw new ServiceException(ResultCode.FAILED);
+        throw new ServiceException(ResultCode.FAILED_PARAMS_VALIDATE, "用户代码缺少右花括号 }，请检查提交内容");
     }
 }

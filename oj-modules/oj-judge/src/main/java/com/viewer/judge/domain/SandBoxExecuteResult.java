@@ -1,5 +1,6 @@
 package com.viewer.judge.domain;
 
+import cn.hutool.core.util.StrUtil;
 import com.viewer.common.core.enums.CodeRunStatus;
 import lombok.Data;
 
@@ -58,6 +59,17 @@ public class SandBoxExecuteResult {
         result.setOutputList(outputList);
         result.setUseMemory(useMemory);
         result.setUseTime(useTime);
+        return result;
+    }
+
+    /**
+     * 失败时带上沙箱里的原始报错（编译错误、异常栈等），而不是只返回状态枚举的文案。
+     * 报错为空时回退到状态默认文案，避免把空串写进库。
+     */
+    public static SandBoxExecuteResult fail(CodeRunStatus runStatus, String exeMessage,
+                                            List<String> outputList, Long useMemory, Long useTime) {
+        SandBoxExecuteResult result = fail(runStatus, outputList, useMemory, useTime);
+        result.setExeMessage(StrUtil.isBlank(exeMessage) ? runStatus.getMsg() : exeMessage);
         return result;
     }
 

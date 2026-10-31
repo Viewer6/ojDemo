@@ -4,10 +4,12 @@ import com.viewer.common.core.controller.BaseController;
 import com.viewer.common.core.domain.Result;
 import com.viewer.friend.Service.user.IUserQuestionService;
 import com.viewer.friend.domain.user.dot.UserSubmitDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.example.api.domain.vo.UserQuestionResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/user/question")
 public class UserQuestionController extends BaseController {
@@ -23,6 +25,7 @@ public class UserQuestionController extends BaseController {
 
     @PostMapping("/rabbit/submit")
     public Result<Void> rabbitSubmit(@RequestBody UserSubmitDTO submitDTO) {
+        log.info(submitDTO.getUserCode());
         return getResult(userQuestionService.rabbitSubmit(submitDTO));
     }
 

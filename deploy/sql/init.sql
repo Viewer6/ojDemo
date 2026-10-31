@@ -173,7 +173,7 @@ create table tb_user_submit(
                                program_type tinyint NOT NULL COMMENT '代码类型 0 java   1 CPP',
                                user_code   text NOT NULL COMMENT '用户代码',
                                pass tinyint NOT NULL COMMENT '0：未通过  1：通过',
-                               exe_message  varchar(500) NOT NULL COMMENT '执行结果',
+                               exe_message  text NOT NULL COMMENT '执行结果（编译错误/异常栈，完整保留）',
                                score int NOT NULL DEFAULT '0' COMMENT '得分',
                                create_by    bigint unsigned not null  comment '创建人',
                                create_time  datetime not null comment '创建时间',

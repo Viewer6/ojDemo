@@ -32,6 +32,7 @@ public enum ResultCode {
     // 题目相关错误码
     AILED_QUESTION_EXISTS(3201, "题目已存在"),
     FAILED_QUESTION_NOT_EXISTS(3202, "题目不存在"),
+    FAILED_QUESTION_CASE_INVALID(3203, "题目用例配置格式错误"),
 
     // 竞赛相关错误码
     EXAM_ALREADY_EXISTS (3301, "竞赛已存在"),

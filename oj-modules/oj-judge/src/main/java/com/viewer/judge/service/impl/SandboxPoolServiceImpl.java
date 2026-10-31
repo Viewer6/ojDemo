@@ -182,8 +182,9 @@ public class SandboxPoolServiceImpl implements ISandboxPoolService {
                 return SandBoxExecuteResult.fail(CodeRunStatus.OUT_OF_TIME, outList, maxMemory, maxUseTime);
             }
             if (CodeRunStatus.FAILED.equals(resultCallback.getCodeRunStatus())) {
-                //未通过所有用例返回结果
-                return SandBoxExecuteResult.fail(CodeRunStatus.NOT_ALL_PASSED, outList, maxMemory, maxUseTime);
+                //未通过所有用例返回结果，同时带上程序写到 stderr 的异常栈，方便定位问题
+                return SandBoxExecuteResult.fail(CodeRunStatus.NOT_ALL_PASSED, resultCallback.getErrorMessage(),
+                        outList, maxMemory, maxUseTime);
             }
             String message = resultCallback.getMessage();
             outList.add(message == null ? "" : message.trim());   //记录正确的输出结果
