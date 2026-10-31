@@ -20,12 +20,18 @@ import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 判题容器池：启动时预先创建若干容器，判题时借出、判题完归还。
  */
 @Slf4j
 public class DockerSandBoxPool {
+
+    /**
+     * 借出容器时最长等待时间（秒）：池中没有可用容器时快速失败，避免判题线程无限期阻塞。
+     */
+    private static final long BORROW_TIMEOUT_SECONDS = 30L;
 
     private DockerClient dockerClient;
 
@@ -73,14 +79,30 @@ public class DockerSandBoxPool {
                 log.error("创建第{}个沙箱容器失败", i, e);
             }
         }
-        log.info("------  创建容器结束，可用容器数：{}  -----", containerQueue.size());
+        int available = containerQueue.size();
+        log.info("------  创建容器结束，可用容器数：{}/{}  -----", available, poolSize);
+        // 启动校验：容器池没有建满，说明 Docker 不可用、镜像拉取失败或容器名冲突，
+        // 必须让应用启动失败，而不是带着一个永远取不到容器的池子静默运行。
+        if (available < poolSize) {
+            throw new IllegalStateException("判题沙箱初始化失败：期望 " + poolSize
+                    + " 个容器，实际只有 " + available
+                    + " 个，请检查 Docker 服务、判题镜像和容器名冲突");
+        }
     }
 
     public String getContainer() {
         try {
-            return containerQueue.take();
+            // 使用带超时的 poll，池子为空时快速失败，避免无限期阻塞判题线程
+            String containerId = containerQueue.poll(BORROW_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            if (containerId == null) {
+                throw new IllegalStateException("获取判题沙箱容器超时（" + BORROW_TIMEOUT_SECONDS
+                        + " 秒），沙箱池中没有空闲容器，请稍后重试");
+            }
+            return containerId;
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            // 恢复中断标记，交由上层感知线程被中断
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("获取判题沙箱容器时线程被中断", e);
         }
     }
 
@@ -91,15 +113,19 @@ public class DockerSandBoxPool {
     private void createContainer(String containerName) {
         List<Container> containerList = dockerClient.listContainersCmd().withShowAll(true).exec();
         if (!CollectionUtil.isEmpty(containerList)) {
-            String targetName = JudgeConstants.JAVA_CONTAINER_PREFIX + containerName;
             for (Container container : containerList) {
                 String[] containerNames = container.getNames();
-                if (containerNames != null && containerNames.length > 0) {
+                if (containerNames == null || containerNames.length == 0) {
+                    continue;
+                }
+                for (String nameInDocker : containerNames) {
                     // 去掉 Docker 自动添加的 / 前缀再匹配
-                    String actualName = containerNames[0].startsWith("/")
-                            ? containerNames[0].substring(1)
-                            : containerNames[0];
-                    if (targetName.equals(actualName)) {
+                    String actualName = nameInDocker.startsWith("/") ? nameInDocker.substring(1) : nameInDocker;
+                    // 必须直接和 containerName 比较：创建容器时用的是不带前缀的 containerName，
+                    // 若在此处再拼 JAVA_CONTAINER_PREFIX（"/"），两边永远不相等，复用逻辑失效，
+                    // 第二次启动会因同名容器冲突导致全部容器创建失败。
+                    if (containerName.equals(actualName)) {
+                        log.info("沙箱容器已存在，直接复用：{}（{}）", containerName, container.getId());
                         // 容器已存在，启动后加入队列
                         if ("created".equals(container.getState()) || "exited".equals(container.getState())) {
                             dockerClient.startContainerCmd(container.getId()).exec();
