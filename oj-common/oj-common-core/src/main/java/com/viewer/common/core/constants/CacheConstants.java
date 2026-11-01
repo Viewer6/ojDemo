@@ -26,6 +26,12 @@ public class CacheConstants {
 
     public static final String QUESTION_LIST = "q:l";
 
+    //题目ES待同步队列：B端增删改题目后把题目id写入这个list，C端检索前按id增量同步
+    public static final String QUESTION_ES_PENDING = "q:es:pending";
+
+    //题目ES全量校对标记：定时任务（xxl-job）设置，C端检索前做一次全量校对，兜住sql直接改库等场景
+    public static final String QUESTION_ES_FULL_SYNC = "q:es:fullsync";
+
     public static final String QUESTION_HOST_LIST = "q:h:l";
 
     public static final String EXAM_QUESTION_LIST = "e:q:l:";

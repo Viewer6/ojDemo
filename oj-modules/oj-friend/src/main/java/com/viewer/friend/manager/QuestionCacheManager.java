@@ -30,9 +30,13 @@ public class QuestionCacheManager {
         return redisService.getListSize(CacheConstants.QUESTION_HOST_LIST);
     }
 
-    public void refreshCache() {
+    public synchronized void refreshCache() {
+        // 先清空旧的题目顺序缓存，避免数据库增删题目后重建时又追加出重复的题目id
+        redisService.deleteObject(CacheConstants.QUESTION_LIST);
         List<Question> questionList = questionMapper.selectList(new LambdaQueryWrapper<Question>()
-                .select(Question::getQuestionId).orderByDesc(Question::getCreateTime));
+                .select(Question::getQuestionId)
+                //和题目列表保持一致：创建时间相同时按题目id倒序，保证上一题/下一题顺序稳定
+                .orderByDesc(Question::getCreateTime, Question::getQuestionId));
         if (CollectionUtil.isEmpty(questionList)) {
             return;
         }

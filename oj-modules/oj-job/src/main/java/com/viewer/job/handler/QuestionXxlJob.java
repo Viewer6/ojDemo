@@ -35,4 +35,18 @@ public class QuestionXxlJob {
         redisService.rightPushAll(CacheConstants.QUESTION_HOST_LIST, questionIdList);
         log.info("----- 题目热门列表统计结束 ------");
     }
+
+    /**
+     * 题目ES索引全量校对标记。
+     * <p>
+     * 这里只设置标记，真正的校对由C端（oj-friend）在查询题目列表时执行，
+     * 这样job模块不用依赖ES，也能兜住“直接执行SQL改题目内容、数量没变”这类场景。
+     * 在xxl-job调度中心配置成每天凌晨0点执行即可。
+     */
+    @XxlJob("questionIndexSyncHandler")
+    public void questionIndexSyncHandler() {
+        log.info("----- 设置题目ES索引全量校对标记开始 ------");
+        redisService.setCacheObject(CacheConstants.QUESTION_ES_FULL_SYNC, System.currentTimeMillis());
+        log.info("----- 设置题目ES索引全量校对标记结束 ------");
+    }
 }

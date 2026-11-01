@@ -185,6 +185,18 @@ public class RedisService {
     }
 
     /**
+     * 底层使用list结构存储数据(从左端弹出一个元素，原子操作)
+     * <p>队列为空时返回null，适合做“待处理队列”的消费</p>
+     */
+    public <T> T leftPopForList(final String key, Class<T> clazz) {
+        Object value = redisTemplate.opsForList().leftPop(key);
+        if (value == null) {
+            return null;
+        }
+        return JSON.parseObject(String.valueOf(value), clazz);
+    }
+
+    /**
      * 底层使用list结构,删除指定数据
      */
     public <T> Long removeForList(final String key, T value) {

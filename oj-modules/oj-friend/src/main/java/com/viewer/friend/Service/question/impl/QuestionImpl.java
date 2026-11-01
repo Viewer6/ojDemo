@@ -3,7 +3,6 @@ package com.viewer.friend.Service.question.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.PageHelper;
 import com.viewer.common.core.constants.Constants;
 import com.viewer.common.core.domain.TableDataInfo;
@@ -15,6 +14,7 @@ import com.viewer.friend.domain.question.vo.QuestionDetailVO;
 import com.viewer.friend.domain.question.vo.QuestionVO;
 import com.viewer.friend.elasticsearch.QuestionRepository;
 import com.viewer.friend.manager.QuestionCacheManager;
+import com.viewer.friend.manager.QuestionIndexManager;
 import com.viewer.friend.mapper.question.QuestionMapper;
 import com.viewer.friend.mapper.user.UserSubmitMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +36,9 @@ public class QuestionImpl implements IQuestionService {
     private QuestionRepository questionRepository;
 
     @Autowired
+    private QuestionIndexManager questionIndexManager;
+
+    @Autowired
     private QuestionMapper questionMapper;
 
     @Autowired
@@ -46,11 +49,13 @@ public class QuestionImpl implements IQuestionService {
 
     @Override
     public TableDataInfo list(QuestionQueryDTO questionQueryDTO) {
-        long count = questionRepository.count();
-        if (count <= 0) {
-            refreshQuestion();
-        }
-        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
+        //从ES检索之前，先确认ES索引和MySQL一致：
+        //B端增删改题目、或直接执行SQL脚本改库后，这里会先把最新题目同步到ES，避免一直检索到旧题目
+        questionIndexManager.syncIfNeeded();
+
+        //按创建时间倒序；很多题目是同一秒插入的（createTime相同），必须再加题目id作为兜底排序，
+        //否则ES对相同排序值的先后顺序不固定，每次刷新列表顺序都会变，翻页还会重复/漏题
+        Sort sort = Sort.by(Sort.Order.desc("createTime"), Sort.Order.desc("questionId"));
         Pageable pageable = PageRequest.of(questionQueryDTO.getPageNum() - 1, questionQueryDTO.getPageSize(), sort);
         Integer difficulty = questionQueryDTO.getDifficulty();
         String keyword = questionQueryDTO.getKeyword();
@@ -68,8 +73,7 @@ public class QuestionImpl implements IQuestionService {
         if (total <= 0) {
             return TableDataInfo.empty();
         }
-        List<QuestionES> questionESList = questionESPage.getContent();
-        List<QuestionVO> questionVOList = BeanUtil.copyToList(questionESList, QuestionVO.class);
+        List<QuestionVO> questionVOList = BeanUtil.copyToList(questionESPage.getContent(), QuestionVO.class);
         return TableDataInfo.success(questionVOList, total);
     }
 
@@ -89,46 +93,41 @@ public class QuestionImpl implements IQuestionService {
 
     @Override
     public QuestionDetailVO detail(Long questionId) {
-        QuestionES questionES = questionRepository.findById(questionId).orElse(null);
-        QuestionDetailVO questionDetailVO = new QuestionDetailVO();
-        if (questionES != null) {
-            BeanUtil.copyProperties(questionES, questionDetailVO);
-            return questionDetailVO;
-        }
+        //详情以MySQL为准，避免ES索引还没同步时把旧题面返回给前端
         Question question = questionMapper.selectById(questionId);
         if (question == null) {
             return null;
         }
-        refreshQuestion();
+        QuestionDetailVO questionDetailVO = new QuestionDetailVO();
         BeanUtil.copyProperties(question, questionDetailVO);
+        //顺手把这道题的最新数据写回ES，判题时读ES也能拿到最新题目
+        questionIndexManager.refreshQuestion(question);
         return questionDetailVO;
     }
 
     @Override
     public String preQuestion(Long questionId) {
-        Long listSize = questionCacheManager.getListSize();
-        if (listSize == null || listSize <= 0) {
-            questionCacheManager.refreshCache();
-        }
+        refreshQuestionListCacheIfNeeded();
         return questionCacheManager.preQuestion(questionId).toString();
     }
 
     @Override
     public String nextQuestion(Long questionId) {
-        Long listSize = questionCacheManager.getListSize();
-        if (listSize == null || listSize <= 0) {
-            questionCacheManager.refreshCache();
-        }
+        refreshQuestionListCacheIfNeeded();
         return questionCacheManager.nextQuestion(questionId).toString();
     }
 
-    private void refreshQuestion() {
-        List<Question> questionList = questionMapper.selectList(new LambdaQueryWrapper<Question>());
-        if (CollectionUtil.isEmpty(questionList)) {
-            return;
+    /**
+     * 题目顺序缓存（Redis list）原来只在缓存为空时才从数据库重建，
+     * 数据库增删题目后缓存不会失效，新题目在上一题/下一题里就找不到。
+     * 这里用数据库题目总数和缓存长度做对比，不一致时重建缓存。
+     */
+    private void refreshQuestionListCacheIfNeeded() {
+        Long listSize = questionCacheManager.getListSize();
+        Long questionCount = questionMapper.selectCount(null);
+        if (listSize == null || listSize <= 0 || !listSize.equals(questionCount)) {
+            questionCacheManager.refreshCache();
         }
-        List<QuestionES> questionESList = BeanUtil.copyToList(questionList, QuestionES.class);
-        questionRepository.saveAll(questionESList);
     }
 
     private List<QuestionVO> assembleQuestionVOList(List<Long> hotQuestionIdList) {
@@ -139,6 +138,10 @@ public class QuestionImpl implements IQuestionService {
         for (Long questionId : hotQuestionIdList) {
             QuestionVO questionVO = new QuestionVO();
             QuestionDetailVO detail = detail(questionId);
+            if (detail == null) {
+                //题目已被删除，跳过，避免热榜因为脏数据报错
+                continue;
+            }
             questionVO.setTitle(detail.getTitle());
             resultList.add(questionVO);
         }

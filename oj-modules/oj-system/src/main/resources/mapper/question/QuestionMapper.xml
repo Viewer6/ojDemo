@@ -29,7 +29,7 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY tq.create_time DESC
+        ORDER BY tq.create_time DESC, tq.question_id DESC
     </select>
 
 </mapper>
