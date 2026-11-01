@@ -63,8 +63,8 @@ public class SandboxServiceImpl implements ISandboxService {
     private String userCodeFileName;
 
     @Override
-    public SandBoxExecuteResult exeJavaCode(Long userId, String userCode, List<String> inputList) {
-        createUserCodeFile(userId, userCode);
+    public SandBoxExecuteResult exeJavaCode(Long userId, String userCode, String mainFuc, List<String> inputList) {
+        createUserCodeFile(userId, userCode, mainFuc);
         initDockerSanBox();
         //编译代码
         CompileResult compileResult = compileCodeByDocker();
@@ -78,8 +78,8 @@ public class SandboxServiceImpl implements ISandboxService {
     }
 
 
-    //创建并返回用户代码的文件
-    private void createUserCodeFile(Long userId, String userCode) {
+    //创建用户代码文件和题目 Main 模板文件
+    private void createUserCodeFile(Long userId, String userCode, String mainFuc) {
         String examCodeDir = System.getProperty("user.dir") + File.separator + JudgeConstants.EXAM_CODE_DIR;
         if (!FileUtil.exist(examCodeDir)) {
             FileUtil.mkdir(examCodeDir); //创建存放用户代码的目录
@@ -89,6 +89,8 @@ public class SandboxServiceImpl implements ISandboxService {
         userCodeDir = examCodeDir + File.separator + userId + Constants.UNDERLINE_SEPARATOR + time;
         userCodeFileName = userCodeDir + File.separator + JudgeConstants.USER_CODE_JAVA_CLASS_NAME;
         FileUtil.writeString(userCode, userCodeFileName, Constants.UTF8);
+        String mainFileName = userCodeDir + File.separator + JudgeConstants.MAIN_JAVA_CLASS_NAME;
+        FileUtil.writeString(mainFuc, mainFileName, Constants.UTF8);
     }
 
     private void initDockerSanBox() {

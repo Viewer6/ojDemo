@@ -74,7 +74,7 @@ public class SandboxPoolServiceImpl implements ISandboxPoolService {
     private Long timeLimit;
 
     @Override
-    public SandBoxExecuteResult exeJavaCode(Long userId, String userCode, List<String> inputList) {
+    public SandBoxExecuteResult exeJavaCode(Long userId, String userCode, String mainFuc, List<String> inputList) {
         // 容器与文件路径都是本次请求的局部变量，避免并发请求互相覆盖
         String containerId;
         try {
@@ -88,7 +88,7 @@ public class SandboxPoolServiceImpl implements ISandboxPoolService {
         String codeDir = null;
         try {
             codeDir = sandBoxPool.getCodeDir(containerId);
-            createUserCodeFile(codeDir, userCode);
+            createUserCodeFile(codeDir, userCode, mainFuc);
             //编译代码
             CompileResult compileResult = compileCodeByDocker(containerId);
             if (!compileResult.isCompiled()) {
@@ -105,13 +105,16 @@ public class SandboxPoolServiceImpl implements ISandboxPoolService {
         }
     }
 
-    //创建用户代码文件
-    private void createUserCodeFile(String codeDir, String userCode) {
+    //创建用户代码文件和题目 Main 模板文件
+    private void createUserCodeFile(String codeDir, String userCode, String mainFuc) {
         String userCodeFileName = codeDir + File.separator + JudgeConstants.USER_CODE_JAVA_CLASS_NAME;
+        String mainFileName = codeDir + File.separator + JudgeConstants.MAIN_JAVA_CLASS_NAME;
         // 容器是复用的，目录里可能残留上一个用户的文件，先删掉
         FileUtil.del(userCodeFileName);
+        FileUtil.del(mainFileName);
         FileUtil.writeString(userCode, userCodeFileName, Constants.UTF8);
-        log.info("用户代码写入：{}", userCodeFileName);
+        FileUtil.writeString(mainFuc, mainFileName, Constants.UTF8);
+        log.info("判题代码写入：{}，{}", userCodeFileName, mainFileName);
     }
 
     //编译
@@ -234,7 +237,7 @@ public class SandboxPoolServiceImpl implements ISandboxPoolService {
     }
 
     /**
-     * 清空挂载目录里的编译产物（Solution.java、Solution.class 以及用户代码自己写的文件），
+     * 清空挂载目录里的编译产物（Solution.java、Main.java 及对应的 .class 文件、用户代码自己写的文件），
      * 保留目录本身，因为容器启动时 bind mount 的就是这个目录。
      */
     private void cleanCodeDir(String codeDir) {

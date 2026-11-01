@@ -27,8 +27,11 @@ public class JudgeSubmitDTO {
     //空间限制 kb
     private Long spaceLimit;
 
-    //拼装完整的用户代码  用户提交的代码 + main函数
+    //用户提交的完整 Solution 代码
     private String userCode;
+
+    //题目配置的 main 函数模板（完整的 Main 类），作为独立文件 Main.java 编译
+    private String mainFuc;
 
     //输入数据
     private List<String> inputList;

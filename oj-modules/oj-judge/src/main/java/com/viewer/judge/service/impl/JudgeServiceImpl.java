@@ -55,7 +55,8 @@ public class JudgeServiceImpl implements IJudgeService {
     public UserQuestionResultVO doJudgeJavaCode(JudgeSubmitDTO judgeSubmitDTO) {
         log.info("---- 判题逻辑开始 -------");
         SandBoxExecuteResult sandBoxExecuteResult =
-                sandboxPoolService.exeJavaCode(judgeSubmitDTO.getUserId(), judgeSubmitDTO.getUserCode(), judgeSubmitDTO.getInputList());
+                sandboxPoolService.exeJavaCode(judgeSubmitDTO.getUserId(), judgeSubmitDTO.getUserCode(),
+                        judgeSubmitDTO.getMainFuc(), judgeSubmitDTO.getInputList());
         UserQuestionResultVO userQuestionResultVO = new UserQuestionResultVO();
         if (sandBoxExecuteResult != null && CodeRunStatus.SUCCEED.equals(sandBoxExecuteResult.getRunStatus())) {
             //比对直接结果  时间限制  空间限制的比对
